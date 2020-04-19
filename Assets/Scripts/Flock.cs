@@ -31,9 +31,8 @@ public class Flock : MonoBehaviour
     {
         for (int i = 0; i < flockSize; i++)
         {
-            Vector3 randomPos = Random.insideUnitSphere * 3f;
-            randomPos.y = 0;
-            GameObject boidObject = Instantiate(boidPrefab, randomPos, Quaternion.identity, transform);
+            GameObject boidObject = Instantiate(boidPrefab, GetRandomXZPosition(3), Quaternion.identity, transform);
+            RandomizeColor(boidObject);
             boidObject.name = "boid "+ i;
             Boid boid = boidObject.AddComponent<Boid>();
             SetBoidBehaviorParameters(boid);
@@ -61,5 +60,21 @@ public class Flock : MonoBehaviour
         boid.cohesionFactor = boidCohesion;
         boid.separationFactor = boidSeparation;
         boid.bounds = new Vector2(boundsX, boundsY);
+    }
+
+    private Vector3 GetRandomXZPosition(float radius)
+    {
+        Vector3 randomPos = Random.insideUnitSphere * radius;
+        randomPos.y = 0;
+
+        return randomPos;
+    }
+
+    private void RandomizeColor(GameObject boidObject)
+    {
+        Renderer[] renderers = boidObject.GetComponentsInChildren<Renderer>();
+        Color randomColor = Random.ColorHSV(0, .2f, 0, .25f, 0.5f, 1f);
+        foreach (Renderer r in renderers)
+            r.material.color = randomColor;
     }
 }

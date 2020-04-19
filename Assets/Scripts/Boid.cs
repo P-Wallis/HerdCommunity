@@ -40,6 +40,8 @@ public class Boid : MonoBehaviour
         if (velocity.magnitude > maxSpeed)
             velocity = velocity.normalized * maxSpeed;
 
+        transform.rotation = Quaternion.Euler(0, velocity.x >0 ? 0 :180, 0);
+
         //Keep Boids In Bounds
         if (Mathf.Abs(position.x) > bounds.x)
             position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
