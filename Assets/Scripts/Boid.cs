@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Boid : MonoBehaviour
 {
-    public Vector2 position {
-        get { return transform.position; }
-        set { transform.position = new Vector3(value.x, value.y, transform.position.z); }
+    public Vector2 position
+    {
+        get { return new Vector2(transform.position.x, transform.position.z); }
+        set { transform.position = new Vector3(value.x, transform.position.y, value.y); }
     }
     [HideInInspector] public Vector2 velocity;
     [HideInInspector] public Vector2 accleration;

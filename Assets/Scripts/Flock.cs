@@ -31,7 +31,10 @@ public class Flock : MonoBehaviour
     {
         for (int i = 0; i < flockSize; i++)
         {
-            GameObject boidObject = Instantiate(boidPrefab, Random.insideUnitCircle * 3f, Quaternion.identity, transform);
+            Vector3 randomPos = Random.insideUnitSphere * 3f;
+            randomPos.y = 0;
+            GameObject boidObject = Instantiate(boidPrefab, randomPos, Quaternion.identity, transform);
+            boidObject.name = "boid "+ i;
             Boid boid = boidObject.AddComponent<Boid>();
             SetBoidBehaviorParameters(boid);
             boid.velocity = Random.insideUnitCircle * boidMaxSpeed;
