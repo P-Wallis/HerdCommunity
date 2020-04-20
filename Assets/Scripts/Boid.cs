@@ -24,6 +24,7 @@ public class Boid : MonoBehaviour
     protected Vector3 scale;
 
     private Transform cameraTransform;
+    private Transform cameraParent { get { return cameraTransform != null ? cameraTransform.parent : null; } }
 
     protected virtual void Start()
     {
@@ -69,12 +70,26 @@ public class Boid : MonoBehaviour
             transform.localScale = new Vector3(scale.x * (direction < 0 ? 1 : -1), scale.y, scale.z);
         }
 
-        
+
         //Keep Boids In Bounds
-        if (Mathf.Abs(position.x) > bounds.x)
-            position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
-        if (Mathf.Abs(position.y) > bounds.y)
-            position = new Vector2(position.x, Mathf.Clamp(position.y * -1, -bounds.y, bounds.y));
+        if (cameraParent != null)
+        {
+            Vector3 camPos = cameraParent.InverseTransformPoint(transform.position);
+
+            if (Mathf.Abs(camPos.x) > bounds.x)
+                camPos.x = Mathf.Clamp(camPos.x * -1, -bounds.x, bounds.x);
+            if (Mathf.Abs(camPos.z) > bounds.y)
+                camPos.z = Mathf.Clamp(camPos.z * -1, -bounds.y, bounds.y);
+
+            transform.position = cameraParent.TransformPoint(camPos);
+        }
+        else
+        {
+            if (Mathf.Abs(position.x) > bounds.x)
+                position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
+            if (Mathf.Abs(position.y) > bounds.y)
+                position = new Vector2(position.x, Mathf.Clamp(position.y * -1, -bounds.y, bounds.y));
+        }
         
     }
 
