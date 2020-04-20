@@ -75,9 +75,9 @@ public class Flock : MonoBehaviour
 
     private void RandomizeColor(GameObject boidObject)
     {
-        Renderer[] renderers = boidObject.GetComponentsInChildren<Renderer>();
+        SpriteRenderer[] renderers = boidObject.GetComponentsInChildren<SpriteRenderer>();
         Color randomColor = Random.ColorHSV(0, .2f, 0, .25f, 0.5f, 1f);
-        foreach (Renderer r in renderers)
-            r.material.color = randomColor;
+        foreach (SpriteRenderer r in renderers)
+            r.color = randomColor;
     }
 }
