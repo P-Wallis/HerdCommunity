@@ -9,6 +9,8 @@ public class Flock : MonoBehaviour
     [Range(0f, 20f)] public float boundsX = 10;
     [Range(0f, 20f)] public float boundsY = 5;
 
+    public Player player;
+
     [Header("Boid Parameters")]
     [Range(0.01f, 10)] public float boidPerceptionRadius = 1;
     [Range(0.01f, 20)] public float boidMaxSpeed = 1;
@@ -39,6 +41,12 @@ public class Flock : MonoBehaviour
             boid.velocity = Random.insideUnitCircle * boidMaxSpeed;
             boids.Add(boid);
         }
+
+        if (player != null)
+        {
+            SetBoidBehaviorParameters(player);
+            boids.Add(player);
+        }
     }
 
     private void Update()
@@ -54,12 +62,7 @@ public class Flock : MonoBehaviour
 
     private void SetBoidBehaviorParameters(Boid boid)
     {
-        boid.perceptionRadius = boidPerceptionRadius;
-        boid.maxSpeed = boidMaxSpeed;
-        boid.alignmentFactor = boidAlignment;
-        boid.cohesionFactor = boidCohesion;
-        boid.separationFactor = boidSeparation;
-        boid.bounds = new Vector2(boundsX, boundsY);
+        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, boidAlignment, boidCohesion, boidSeparation, new Vector2(boundsX, boundsY));
     }
 
     private Vector3 GetRandomXZPosition(float radius)

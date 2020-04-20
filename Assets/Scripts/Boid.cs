@@ -10,7 +10,7 @@ public class Boid : MonoBehaviour
         set { transform.position = new Vector3(value.x, transform.position.y, value.y); }
     }
     [HideInInspector] public Vector2 velocity;
-    [HideInInspector] public Vector2 accleration;
+    [HideInInspector] public Vector2 acceleration;
 
     [HideInInspector] public float perceptionRadius;
     [HideInInspector] public float maxSpeed;
@@ -18,35 +18,64 @@ public class Boid : MonoBehaviour
     [HideInInspector] public float cohesionFactor;
     [HideInInspector] public float separationFactor;
 
-
     [HideInInspector] public Vector2 bounds;
 
-    public void CalculateAcceleration(List<Boid> flock)
+    protected bool flipByVelocity = true;
+    protected Vector3 scale;
+
+    private Transform cameraTransform;
+
+    protected virtual void Start()
     {
-        List<Boid> localBoids = GetLocalBoids(flock);
-        accleration = Vector2.zero;
-        accleration += GetAlignment(localBoids) * alignmentFactor;
-        accleration += GetCohesion(localBoids) * cohesionFactor;
-        accleration += GetSeparation(localBoids) * separationFactor;
+        scale = transform.localScale;
+        cameraTransform = Camera.main.transform;
     }
 
-    public void DoMovement()
+    public virtual void SetParameters(float boidPerceptionRadius, float boidMaxSpeed, float boidAlignment, float boidCohesion, float boidSeparation, Vector2 boidBounds)
+    {
+        perceptionRadius = boidPerceptionRadius;
+        maxSpeed = boidMaxSpeed;
+        alignmentFactor = boidAlignment;
+        cohesionFactor = boidCohesion;
+        separationFactor = boidSeparation;
+        bounds = boidBounds;
+    }
+
+    public virtual void CalculateAcceleration(List<Boid> flock)
+    {
+        List<Boid> localBoids = GetLocalBoids(flock);
+        acceleration = Vector2.zero;
+        acceleration += GetAlignment(localBoids) * alignmentFactor;
+        acceleration += GetCohesion(localBoids) * cohesionFactor;
+        acceleration += GetSeparation(localBoids) * separationFactor;
+    }
+
+    public virtual void DoMovement()
     {
         // Update position and velocity
         position += velocity * Time.deltaTime;
-        velocity += accleration * Time.deltaTime;
+        velocity += acceleration * Time.deltaTime;
 
         // Limit the velocity to max speed
         if (velocity.magnitude > maxSpeed)
+        {
             velocity = velocity.normalized * maxSpeed;
+        }
 
-        transform.rotation = Quaternion.Euler(0, velocity.x >0 ? 0 :180, 0);
+        // Flip to face movement direction
+        if (flipByVelocity)
+        {
+            float direction = Vector3.Dot(cameraTransform.right, new Vector3(velocity.x, 0, velocity.y).normalized);
+            transform.localScale = new Vector3(scale.x * (direction < 0 ? 1 : -1), scale.y, scale.z);
+        }
 
+        
         //Keep Boids In Bounds
         if (Mathf.Abs(position.x) > bounds.x)
             position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
         if (Mathf.Abs(position.y) > bounds.y)
             position = new Vector2(position.x, Mathf.Clamp(position.y * -1, -bounds.y, bounds.y));
+        
     }
 
     private List<Boid> GetLocalBoids(List<Boid> flock)
