@@ -74,17 +74,31 @@ public class Boid : MonoBehaviour
         //Keep Boids In Bounds
         if (cameraParent != null)
         {
+            // make bounds relative to the camera's position
             Vector3 camPos = cameraParent.InverseTransformPoint(transform.position);
+            bool setPos = false;
 
             if (Mathf.Abs(camPos.x) > bounds.x)
+            {
+                setPos = true;
                 camPos.x = Mathf.Clamp(camPos.x * -1, -bounds.x, bounds.x);
+            }
             if (Mathf.Abs(camPos.z) > bounds.y)
+            {
+                setPos = true;
                 camPos.z = Mathf.Clamp(camPos.z * -1, -bounds.y, bounds.y);
+            }
 
-            transform.position = cameraParent.TransformPoint(camPos);
+            if (setPos)
+            {
+                Vector3 newPos = cameraParent.TransformPoint(camPos);
+                newPos.y = 0;
+                transform.position = newPos;
+            }
         }
         else
         {
+            // If no camera is present, use bounds based on global coordinates
             if (Mathf.Abs(position.x) > bounds.x)
                 position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
             if (Mathf.Abs(position.y) > bounds.y)
