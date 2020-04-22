@@ -4,42 +4,44 @@ using UnityEngine;
 
 public class Boid : MonoBehaviour
 {
-    public Vector2 position
+    public Vector2 position // Mostly a 2D shorcut for transform.position, but using z as the y axis
     {
         get { return new Vector2(transform.position.x, transform.position.z); }
         set { transform.position = new Vector3(value.x, transform.position.y, value.y); }
     }
     [HideInInspector] public Vector2 velocity;
     [HideInInspector] public Vector2 acceleration;
-
-    [HideInInspector] public float perceptionRadius;
-    [HideInInspector] public float maxSpeed;
-    [HideInInspector] public float alignmentFactor;
-    [HideInInspector] public float cohesionFactor;
-    [HideInInspector] public float separationFactor;
-
     [HideInInspector] public Vector2 bounds;
 
+    protected float perceptionRadius;
+    protected float maxSpeed;
+    protected float alignmentFactor;
+    protected float cohesionFactor;
+    protected float separationFactor;
+    protected Flock flock;
     protected bool flipByVelocity = true;
     protected Vector3 scale;
 
     private Transform cameraTransform;
-    private Transform cameraParent { get { return cameraTransform != null ? cameraTransform.parent : null; } }
+    private Transform cameraParent;
 
-    protected virtual void Start()
+    public virtual void Init(Flock flock, Camera camera)
     {
+        this.flock = flock;
+        cameraTransform = camera!=null ? camera.transform : null;
+        cameraParent = cameraTransform != null ? cameraTransform.parent : null;
         scale = transform.localScale;
-        cameraTransform = Camera.main.transform;
     }
 
-    public virtual void SetParameters(float boidPerceptionRadius, float boidMaxSpeed, float boidAlignment, float boidCohesion, float boidSeparation, Vector2 boidBounds)
+    public virtual void SetParameters(float perceptionRadius, float maxSpeed, Vector2 bounds, float alignment, float cohesion, float separation)
     {
-        perceptionRadius = boidPerceptionRadius;
-        maxSpeed = boidMaxSpeed;
-        alignmentFactor = boidAlignment;
-        cohesionFactor = boidCohesion;
-        separationFactor = boidSeparation;
-        bounds = boidBounds;
+        this.perceptionRadius = perceptionRadius;
+        this.maxSpeed = maxSpeed;
+        this.bounds = bounds;
+
+        alignmentFactor = alignment;
+        cohesionFactor = cohesion;
+        separationFactor = separation;
     }
 
     public virtual void CalculateAcceleration(List<Boid> flock)

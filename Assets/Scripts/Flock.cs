@@ -10,6 +10,7 @@ public class Flock : MonoBehaviour
     [Range(0f, 20f)] public float boundsY = 5;
 
     public Player player;
+    public Camera mainCamera;
 
     [Header("Boid Parameters")]
     [Range(0.01f, 10)] public float boidPerceptionRadius = 1;
@@ -37,14 +38,14 @@ public class Flock : MonoBehaviour
             RandomizeColor(boidObject);
             boidObject.name = "boid "+ i;
             Boid boid = boidObject.AddComponent<Boid>();
-            SetBoidBehaviorParameters(boid);
+            InitBoid(boid);
             boid.velocity = Random.insideUnitCircle * boidMaxSpeed;
             boids.Add(boid);
         }
 
         if (player != null)
         {
-            SetBoidBehaviorParameters(player);
+            InitBoid(player);
             boids.Add(player);
         }
     }
@@ -60,9 +61,16 @@ public class Flock : MonoBehaviour
             boids[i].DoMovement();
     }
 
+    private void InitBoid(Boid boid)
+    {
+        boid.Init(this, mainCamera);
+        SetBoidBehaviorParameters(boid);
+    }
+
     private void SetBoidBehaviorParameters(Boid boid)
     {
-        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, boidAlignment, boidCohesion, boidSeparation, new Vector2(boundsX, boundsY));
+        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, new Vector2(boundsX, boundsY),
+            boidAlignment, boidCohesion, boidSeparation);
     }
 
     private Vector3 GetRandomXZPosition(float radius)
