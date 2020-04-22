@@ -517,10 +517,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: 9078172654350523757, guid: 87834220ecbe14994aca51b2c1b1dedb,
     type: 3}
+  bloodParticlesPrefab: {fileID: 1019380434884352037, guid: 203700d6b47104c8e8812c55384b36b1,
+    type: 3}
+  player: {fileID: 1951723198}
+  mainCamera: {fileID: 519420031}
   flockSize: 100
   boundsX: 6
   boundsY: 14
-  player: {fileID: 1951723198}
+  startRadius: 3
   boidPerceptionRadius: 3
   boidMaxSpeed: 2
   boidAlignment: 1
@@ -597,7 +601,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Controls:
 
-    WASD/Arrows'
+    Move: WASD/Arrows
+
+    Shoot: Mouse Click'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -666,12 +672,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1169023402}
-    characterCount: 21
+    characterCount: 46
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 3
+    spaceCount: 5
+    wordCount: 7
     linkCount: 0
-    lineCount: 2
+    lineCount: 3
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -789,7 +795,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1663850484}
   m_LocalRotation: {x: -0.13052616, y: -0, z: -0, w: 0.9914449}
-  m_LocalPosition: {x: 0, y: 1.7869629, z: -0.47881514}
+  m_LocalPosition: {x: 0, y: 3.21, z: 4.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 642527633}
@@ -940,17 +946,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocity: {x: 0, y: 0}
   acceleration: {x: 0, y: 0}
-  perceptionRadius: 0
-  maxSpeed: 0
-  alignmentFactor: 0
-  cohesionFactor: 0
-  separationFactor: 0
   bounds: {x: 0, y: 0}
   playerMaxSpeed: 5
   accelerateFactor: 0.18
   brakeFactor: 0.166
   steerFactor: 0.02
   drag: 0.1
+--- !u!1 &2032154468 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2301032067236987030, guid: 5538bd7daa254491eac661846c747b6d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2301032066390451906}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2032154469
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032154468}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 30, y: 1, z: 30}
+  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!1001 &2301032066390451906
 PrefabInstance:
   m_ObjectHideFlags: 0

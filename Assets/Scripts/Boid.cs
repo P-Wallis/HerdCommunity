@@ -13,6 +13,7 @@ public class Boid : MonoBehaviour
     [HideInInspector] public Vector2 acceleration;
     [HideInInspector] public Vector2 bounds;
 
+
     protected float perceptionRadius;
     protected float maxSpeed;
     protected float alignmentFactor;
@@ -24,13 +25,21 @@ public class Boid : MonoBehaviour
 
     private Transform cameraTransform;
     private Transform cameraParent;
+    private bool markedForDeath = false;
+    private GameObject deathParticles;
 
-    public virtual void Init(Flock flock, Camera camera)
+    private void OnMouseDown()
+    {
+        Kill(); // Just for testing, kill the gazelle when it's clicked
+    }
+
+    public virtual void Init(Flock flock, Camera camera, GameObject deathParticles)
     {
         this.flock = flock;
         cameraTransform = camera!=null ? camera.transform : null;
         cameraParent = cameraTransform != null ? cameraTransform.parent : null;
         scale = transform.localScale;
+        this.deathParticles = deathParticles;
     }
 
     public virtual void SetParameters(float perceptionRadius, float maxSpeed, Vector2 bounds, float alignment, float cohesion, float separation)
@@ -42,6 +51,15 @@ public class Boid : MonoBehaviour
         alignmentFactor = alignment;
         cohesionFactor = cohesion;
         separationFactor = separation;
+    }
+
+    public virtual void PerformDeathActions()
+    {
+        if (deathParticles != null)
+        {
+            Destroy(Instantiate(deathParticles, transform.position + (Vector3.up * 0.25f), transform.rotation, transform.parent), 1f);
+        }
+        Destroy(gameObject);
     }
 
     public virtual void CalculateAcceleration(List<Boid> flock)
@@ -107,6 +125,15 @@ public class Boid : MonoBehaviour
                 position = new Vector2(position.x, Mathf.Clamp(position.y * -1, -bounds.y, bounds.y));
         }
         
+    }
+
+    public void Kill()
+    {
+        bool wasMarkedForDeath = markedForDeath;
+        markedForDeath = true;
+
+        if (!wasMarkedForDeath)
+            flock.KillBoid(this);
     }
 
     private List<Boid> GetLocalBoids(List<Boid> flock)
