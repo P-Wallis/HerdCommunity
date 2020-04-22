@@ -12,10 +12,10 @@ public class Player : Boid
 
     private float boidMaxSpeed;
 
-    public override void SetParameters(float boidPerceptionRadius, float boidMaxSpeed, float boidAlignment, float boidCohesion, float boidSeparation, Vector2 boidBounds)
+    public override void SetParameters(float perceptionRadius, float maxSpeed, Vector2 bounds, float alignment, float cohesion, float separation)
     {
-        this.boidMaxSpeed = boidMaxSpeed;
-        base.SetParameters(boidPerceptionRadius, playerMaxSpeed, boidAlignment, boidCohesion, boidSeparation, boidBounds);
+        boidMaxSpeed = maxSpeed;
+        base.SetParameters(perceptionRadius, playerMaxSpeed, bounds, alignment, cohesion, separation);
     }
 
     public override void CalculateAcceleration(List<Boid> flock)
