@@ -23,7 +23,7 @@ public class Flock : MonoBehaviour
     [Range(0f, 1f)] public float boidCohesion = 1;
     [Range(0f, 1f)] public float boidSeparation = 1;
 
-    private List<Boid> boids = new List<Boid>();
+    public List<Boid> boids = new List<Boid>();
     private List<Boid> deadBoids = new List<Boid>();
 
 #if UNITY_EDITOR
