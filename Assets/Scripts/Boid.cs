@@ -13,7 +13,6 @@ public class Boid : MonoBehaviour
     [HideInInspector] public Vector2 acceleration;
     [HideInInspector] public Vector2 bounds;
 
-
     protected float perceptionRadius;
     protected float maxSpeed;
     protected float alignmentFactor;
@@ -62,13 +61,14 @@ public class Boid : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public virtual void CalculateAcceleration(List<Boid> flock)
+    public virtual void CalculateAcceleration(List<Boid> flock, List<Vector2> avoidPoints = null)
     {
         List<Boid> localBoids = GetLocalBoids(flock);
         acceleration = Vector2.zero;
         acceleration += GetAlignment(localBoids) * alignmentFactor;
         acceleration += GetCohesion(localBoids) * cohesionFactor;
         acceleration += GetSeparation(localBoids) * separationFactor;
+        acceleration += GetCollisionAvoidance(avoidPoints);
     }
 
     public virtual void DoMovement()
@@ -90,41 +90,9 @@ public class Boid : MonoBehaviour
             transform.localScale = new Vector3(scale.x * (direction < 0 ? 1 : -1), scale.y, scale.z);
         }
 
-
-        //Keep Boids In Bounds
-        if (cameraParent != null)
-        {
-            // make bounds relative to the camera's position
-            Vector3 camPos = cameraParent.InverseTransformPoint(transform.position);
-            bool setPos = false;
-
-            if (Mathf.Abs(camPos.x) > bounds.x)
-            {
-                setPos = true;
-                camPos.x = Mathf.Clamp(camPos.x * -1, -bounds.x, bounds.x);
-            }
-            if (Mathf.Abs(camPos.z) > bounds.y)
-            {
-                setPos = true;
-                camPos.z = Mathf.Clamp(camPos.z * -1, -bounds.y, bounds.y);
-            }
-
-            if (setPos)
-            {
-                Vector3 newPos = cameraParent.TransformPoint(camPos);
-                newPos.y = 0;
-                transform.position = newPos;
-            }
-        }
-        else
-        {
-            // If no camera is present, use bounds based on global coordinates
-            if (Mathf.Abs(position.x) > bounds.x)
-                position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
-            if (Mathf.Abs(position.y) > bounds.y)
-                position = new Vector2(position.x, Mathf.Clamp(position.y * -1, -bounds.y, bounds.y));
-        }
-        
+        // Optionally, Confine to Bounds
+        if (flock.constrainBoidsToBounds)
+            ConstrainToBounds();
     }
 
     public void Kill()
@@ -204,5 +172,64 @@ public class Boid : MonoBehaviour
             }
         }
         return separation;
+    }
+
+    protected Vector2 GetCollisionAvoidance(List<Vector2> avoidPoints)
+    {
+        Vector2 collision = Vector2.zero;
+
+        if (avoidPoints != null && avoidPoints.Count > 0)
+        {
+            float distance;
+            Vector2 direction;
+            for (int i = 0; i < avoidPoints.Count; i++)
+            {
+                distance = Vector2.Distance(position, avoidPoints[i]);
+                if (distance < (perceptionRadius * 2))
+                {
+                    direction = (position - avoidPoints[i]).normalized;
+                    direction *= perceptionRadius / distance;
+                    collision += direction;
+                }
+            }
+        }
+        return collision;
+    }
+
+    private void ConstrainToBounds()
+    {
+        //Keep Boids In Bounds
+        if (cameraParent != null)
+        {
+            // make bounds relative to the camera's position
+            Vector3 camPos = cameraParent.InverseTransformPoint(transform.position);
+            bool setPos = false;
+
+            if (Mathf.Abs(camPos.x) > bounds.x)
+            {
+                setPos = true;
+                camPos.x = Mathf.Clamp(camPos.x * -1, -bounds.x, bounds.x);
+            }
+            if (Mathf.Abs(camPos.z) > bounds.y)
+            {
+                setPos = true;
+                camPos.z = Mathf.Clamp(camPos.z * -1, -bounds.y, bounds.y);
+            }
+
+            if (setPos)
+            {
+                Vector3 newPos = cameraParent.TransformPoint(camPos);
+                newPos.y = 0;
+                transform.position = newPos;
+            }
+        }
+        else
+        {
+            // If no camera is present, use bounds based on global coordinates
+            if (Mathf.Abs(position.x) > bounds.x)
+                position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
+            if (Mathf.Abs(position.y) > bounds.y)
+                position = new Vector2(position.x, Mathf.Clamp(position.y * -1, -bounds.y, bounds.y));
+        }
     }
 }

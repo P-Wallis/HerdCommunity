@@ -521,15 +521,18 @@ MonoBehaviour:
     type: 3}
   player: {fileID: 1951723198}
   mainCamera: {fileID: 519420031}
+  avoidTransforms: []
   flockSize: 100
   boundsX: 6
   boundsY: 14
   startRadius: 3
+  constrainBoidsToBounds: 1
   boidPerceptionRadius: 3
   boidMaxSpeed: 2
   boidAlignment: 1
   boidCohesion: 1
   boidSeparation: 0.05
+  avoidPoints: []
 --- !u!4 &837533524
 Transform:
   m_ObjectHideFlags: 0
@@ -982,6 +985,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TestPlane
+      objectReference: {fileID: 0}
+    - target: {fileID: 2301032067236987030, guid: 5538bd7daa254491eac661846c747b6d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2301032067236987031, guid: 5538bd7daa254491eac661846c747b6d,
         type: 3}
