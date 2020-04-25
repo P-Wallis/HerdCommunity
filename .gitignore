@@ -58,3 +58,10 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+import/
+autoback/
+materiallibraries/
+export/
+Models/
+scenes/
+Herd_Immunity_GameJam.mxp
