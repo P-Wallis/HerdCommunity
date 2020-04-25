@@ -83,11 +83,11 @@ public class Boid : MonoBehaviour
             velocity = velocity.normalized * maxSpeed;
         }
 
-        // Flip to face movement direction
+        // Rotate to face movement direction
         if (flipByVelocity)
         {
-            float direction = Vector3.Dot(cameraTransform.right, new Vector3(velocity.x, 0, velocity.y).normalized);
-            transform.localScale = new Vector3(scale.x * (direction < 0 ? 1 : -1), scale.y, scale.z);
+            Vector3 lookAtPos = new Vector3(transform.position.x + velocity.x, transform.position.y, transform.position.z + velocity.y);
+            transform.LookAt(lookAtPos, Vector3.up);
         }
 
         // Optionally, Confine to Bounds

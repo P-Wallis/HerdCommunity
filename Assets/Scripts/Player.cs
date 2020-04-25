@@ -36,8 +36,9 @@ public class Player : Boid
             acceleration /= Time.deltaTime;
 
             //Flip based on steering
-            flipByVelocity = false;
-            transform.localScale = new Vector3(scale.x * (steer < 0 ? 1 : -1), scale.y, scale.z);
+            //flipByVelocity = false;
+            //Vector3 lookAtPos = new Vector3(transform.position.x + velocity.x, transform.position.y, transform.position.z + velocity.y);
+            //transform.LookAt(lookAtPos, Vector3.up);
         }
         else
         {

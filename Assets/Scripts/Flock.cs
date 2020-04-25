@@ -38,10 +38,13 @@ public class Flock : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-        for (int i = 0; i < avoidPoints.Count; i++)
+        if (avoidPoints != null)
         {
-            Gizmos.DrawSphere(new Vector3(avoidPoints[i].x, 0, avoidPoints[i].y), .5f);
+            Gizmos.color = Color.blue;
+            for (int i = 0; i < avoidPoints.Count; i++)
+            {
+                Gizmos.DrawSphere(new Vector3(avoidPoints[i].x, 0, avoidPoints[i].y), .5f);
+            }
         }
 
         Gizmos.color = Color.black;
@@ -124,10 +127,10 @@ public class Flock : MonoBehaviour
 
     private void RandomizeColor(GameObject boidObject)
     {
-        SpriteRenderer[] renderers = boidObject.GetComponentsInChildren<SpriteRenderer>();
-        Color randomColor = Random.ColorHSV(0, .2f, 0, .25f, 0.5f, 1f);
-        foreach (SpriteRenderer r in renderers)
-            r.color = randomColor;
+        Renderer[] renderers = boidObject.GetComponentsInChildren<Renderer>();
+        Color randomColor = Random.ColorHSV(0, .2f, 0, .25f, 0f, 1f);
+        foreach (Renderer r in renderers)
+            r.material.color = randomColor;
     }
 
     private List<Vector2> GetAvoidPoints()
@@ -144,7 +147,6 @@ public class Flock : MonoBehaviour
 
             points.Add(new Vector2(avoidTransforms[i].position.x, avoidTransforms[i].position.z));
         }
-
 
         /*
         // Testing Collision Circle 
