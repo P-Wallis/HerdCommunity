@@ -34,11 +34,6 @@ public class Player : Boid
             acceleration = direction * accelerate * (braking ? brakeFactor * velocity.magnitude : maxSpeed * accelerateFactor);
             acceleration += normal * steer * steerFactor * velocity.magnitude;
             acceleration /= Time.deltaTime;
-
-            //Flip based on steering
-            //flipByVelocity = false;
-            //Vector3 lookAtPos = new Vector3(transform.position.x + velocity.x, transform.position.y, transform.position.z + velocity.y);
-            //transform.LookAt(lookAtPos, Vector3.up);
         }
         else
         {
