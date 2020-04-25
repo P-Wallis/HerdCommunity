@@ -18,7 +18,7 @@ public class Player : Boid
         base.SetParameters(perceptionRadius, playerMaxSpeed, bounds, alignment, cohesion, separation);
     }
 
-    public override void CalculateAcceleration(List<Boid> flock)
+    public override void CalculateAcceleration(List<Boid> flock, List<Vector2> avoidPoints = null)
     {
         float accelerate = Input.GetAxisRaw("Vertical");
         float steer = Input.GetAxisRaw("Horizontal");
@@ -36,15 +36,16 @@ public class Player : Boid
             acceleration /= Time.deltaTime;
 
             //Flip based on steering
-            flipByVelocity = false;
-            transform.localScale = new Vector3(scale.x * (steer < 0 ? 1 : -1), scale.y, scale.z);
+            //flipByVelocity = false;
+            //Vector3 lookAtPos = new Vector3(transform.position.x + velocity.x, transform.position.y, transform.position.z + velocity.y);
+            //transform.LookAt(lookAtPos, Vector3.up);
         }
         else
         {
             maxSpeed = boidMaxSpeed;
 
             flipByVelocity = true;
-            base.CalculateAcceleration(flock);
+            base.CalculateAcceleration(flock, avoidPoints);
         }
     }
 
