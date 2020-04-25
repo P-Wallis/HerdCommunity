@@ -40,7 +40,7 @@ public class CameraControls : MonoBehaviour
 
         // Update Ground Plane Textures
         planesParent.position = new Vector3(transform.position.x, -0.2f, transform.position.z);
-        Vector2 offset = new Vector2(transform.position.x, transform.position.z) /-10;
+        Vector2 offset = new Vector2(transform.position.x, transform.position.z) / -3;
         foreach (Renderer r in planes)
             r.material.SetTextureOffset("_MainTex", offset);
     }
