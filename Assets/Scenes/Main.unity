@@ -516,9 +516,9 @@ MonoBehaviour:
   constrainBoidsToBounds: 1
   boidPerceptionRadius: 3
   boidMaxSpeed: 2
-  boidAlignment: 1
+  boidAlignment: 1.5
   boidCohesion: 1
-  boidSeparation: 0.05
+  boidSeparation: 0.08
   boids: []
 --- !u!4 &837533524
 Transform:
