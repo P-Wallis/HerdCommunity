@@ -34,7 +34,7 @@ public class ReferenceManager : MonoBehaviour
     }
 
     // Static Method for Assigning References
-    public static void GetReferences(object target)
+    public static void GetReferences(object target, bool errorOnNullRef = true)
     {
         if (instance == null)
         {
@@ -58,8 +58,10 @@ public class ReferenceManager : MonoBehaviour
             field = targetType.GetField(reference.name);
             if (field != null && field.FieldType == reference.type)
             {
+                if (errorOnNullRef && reference.value == null)
+                    Debug.LogError("Reference Manager Field Assignment Failed: reference for '" + reference.name + "' is null");
+
                 field.SetValue(target, reference.value);
-                Debug.Log("Setting '" + reference.name + "' on " + targetType.Name);
             }
         }
     }
@@ -81,6 +83,9 @@ public class ReferenceManager : MonoBehaviour
             reference.value = rmFields[i].GetValue(this);
 
             references.Add(reference);
+
+            if (reference.value == null)
+                Debug.LogWarning("Reference Manager: reference for '" + reference.name + "' is null - this will probably cause errors");
         }
     }
 
@@ -90,5 +95,5 @@ public class ReferenceManager : MonoBehaviour
         public Type type;
         public object value;
     }
-    #endregion
+#endregion
 }

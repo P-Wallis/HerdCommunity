@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class CameraControls : MonoBehaviour
 {
+    // Reference Manager Fields
     [HideInInspector] public Player player;
-    [Range(0,10)] public float speed;
     [HideInInspector] public Transform planesParent;
+
+    [Range(0,10)] public float speed;
     private Renderer[] planes;
 
     private void Start()
