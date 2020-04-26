@@ -5,11 +5,13 @@ using AvoidPoint = Boid.AvoidPoint;
 
 public class Flock : MonoBehaviour
 {
+    // Reference Manager Fields
+    [HideInInspector] public GameObject boidPrefab;
+    [HideInInspector] public GameObject bloodParticlesPrefab;
+    [HideInInspector] public Player player;
+    [HideInInspector] public Camera mainCamera;
+
     [Header("Object References")]
-    public GameObject boidPrefab;
-    public GameObject bloodParticlesPrefab;
-    public Player player;
-    public Camera mainCamera;
     public List<Transform> avoidTransforms;
 
     [Header("Flock Parameters")]
@@ -58,6 +60,9 @@ public class Flock : MonoBehaviour
 
     private void Start()
     {
+        // Assign references via reflection
+        ReferenceManager.GetReferences(this);
+
         for (int i = 0; i < flockSize; i++)
         {
             GameObject boidObject = Instantiate(boidPrefab, GetRandomXZPosition(startRadius), Quaternion.identity, transform);
