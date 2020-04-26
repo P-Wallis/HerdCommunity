@@ -11,6 +11,7 @@ public class Scatter : MonoBehaviour
         public GameObject prefab;
         [Range(0, 100)] public int count;
         public bool randomizeRotation;
+        public bool addToHerdAvoidList;
     }
 
     private class ScatterPositionResetter : MonoBehaviour
@@ -52,6 +53,7 @@ public class Scatter : MonoBehaviour
         }
     }
 
+    public Flock flock;
     public Transform cameraParent;
     [Range(0f, 20f)] public float scatterAreaX = 10;
     [Range(0f, 20f)] public float scatterAreaY = 5;
@@ -92,6 +94,9 @@ public class Scatter : MonoBehaviour
                 spr.bounds = new Vector2(scatterAreaX, scatterAreaY);
                 spr.padding = Vector2.one;
                 spr.cameraParent = cameraParent;
+
+                if (data.addToHerdAvoidList)
+                    flock.avoidTransforms.Add(instance.transform);
             }
         }
     }

@@ -391,6 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc851b401795c485595f988c333909e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flock: {fileID: 837533523}
   cameraParent: {fileID: 642527633}
   scatterAreaX: 6
   scatterAreaY: 14
@@ -400,11 +401,13 @@ MonoBehaviour:
       type: 3}
     count: 100
     randomizeRotation: 1
+    addToHerdAvoidList: 0
   - name: TestTree
     prefab: {fileID: 2888263503730641415, guid: a0c6e73a76e304fda9fe855964567ac8,
       type: 3}
     count: 7
     randomizeRotation: 1
+    addToHerdAvoidList: 1
 --- !u!4 &599703266
 Transform:
   m_ObjectHideFlags: 0
@@ -515,7 +518,6 @@ MonoBehaviour:
   boidCohesion: 1
   boidSeparation: 0.05
   boids: []
-  avoidPoints: []
 --- !u!4 &837533524
 Transform:
   m_ObjectHideFlags: 0
