@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AvoidPoint = Boid.AvoidPoint;
 
 public class Flock : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class Flock : MonoBehaviour
 
     public List<Boid> boids = new List<Boid>();
     private List<Boid> deadBoids = new List<Boid>();
-    protected List<Vector2> avoidPoints = new List<Vector2>();
+    protected List<AvoidPoint> avoidPoints = new List<AvoidPoint>();
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -43,7 +44,7 @@ public class Flock : MonoBehaviour
             Gizmos.color = Color.blue;
             for (int i = 0; i < avoidPoints.Count; i++)
             {
-                Gizmos.DrawSphere(new Vector3(avoidPoints[i].x, 0, avoidPoints[i].y), .5f);
+                Gizmos.DrawSphere(avoidPoints[i].WorldPosition, .5f * avoidPoints[i].Weight);
             }
         }
 
@@ -73,6 +74,8 @@ public class Flock : MonoBehaviour
             InitBoid(player);
             boids.Add(player);
         }
+
+        AddAvoidPointsFromTransforms();
     }
 
     private void Update()
@@ -86,7 +89,6 @@ public class Flock : MonoBehaviour
         deadBoids.Clear();
 
         // Calculate the next update
-        GetAvoidPoints();
         for (int i = 0; i < boids.Count; i++)
         {
             boids[i].CalculateAcceleration(boids, avoidPoints);
@@ -132,19 +134,17 @@ public class Flock : MonoBehaviour
             r.material.color = randomColor;
     }
 
-    private List<Vector2> GetAvoidPoints()
+    private void AddAvoidPointsFromTransforms()
     {
-        avoidPoints.Clear();
-
-        if(avoidTransforms.Count<1)
-            return null;
+        if (avoidTransforms.Count < 1)
+            return;
 
         for (int i = 0; i < avoidTransforms.Count; i++)
         {
             if (avoidTransforms[i] == null)
                 continue;
 
-            avoidPoints.Add(new Vector2(avoidTransforms[i].position.x, avoidTransforms[i].position.z));
+            avoidPoints.Add(new AvoidPoint(avoidTransforms[i], 1));
         }
 
         /*
@@ -157,6 +157,10 @@ public class Flock : MonoBehaviour
             points.Add(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)) * r);
         }
         */
-        return avoidPoints;
+    }
+
+    public void AddAvoidPoint(Transform transform, float weight = 1)
+    {
+        avoidPoints.Add(new AvoidPoint(transform, weight));
     }
 }
