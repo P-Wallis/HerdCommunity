@@ -362,6 +362,66 @@ Transform:
   m_Father: {fileID: 642527633}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &599703264
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 599703266}
+  - component: {fileID: 599703265}
+  m_Layer: 0
+  m_Name: PropScatter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &599703265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599703264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc851b401795c485595f988c333909e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flock: {fileID: 837533523}
+  cameraParent: {fileID: 642527633}
+  scatterAreaX: 6
+  scatterAreaY: 14
+  scatterObjects:
+  - name: GrassPatch
+    prefab: {fileID: 8093562805713443012, guid: 10e6f374b1244454c8f446a07e6d9e89,
+      type: 3}
+    count: 100
+    randomizeRotation: 1
+    addToHerdAvoidList: 0
+  - name: TestTree
+    prefab: {fileID: 2888263503730641415, guid: a0c6e73a76e304fda9fe855964567ac8,
+      type: 3}
+    count: 8
+    randomizeRotation: 1
+    addToHerdAvoidList: 1
+--- !u!4 &599703266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599703264}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &642527632
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +517,6 @@ MonoBehaviour:
   boidAlignment: 1
   boidCohesion: 1
   boidSeparation: 0.05
-  avoidPoints: []
   boids: []
 --- !u!4 &837533524
 Transform:
