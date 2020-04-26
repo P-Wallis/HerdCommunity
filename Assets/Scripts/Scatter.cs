@@ -12,6 +12,7 @@ public class Scatter : MonoBehaviour
         [Range(0, 100)] public int count;
         public bool randomizeRotation;
         public bool addToHerdAvoidList;
+        [Range(0,1)]public float avoidanceWeight;
     }
 
     private class ScatterPositionResetter : MonoBehaviour
@@ -96,7 +97,7 @@ public class Scatter : MonoBehaviour
                 spr.cameraParent = cameraParent;
 
                 if (data.addToHerdAvoidList)
-                    flock.avoidTransforms.Add(instance.transform);
+                    flock.AddAvoidPoint(instance.transform, data.avoidanceWeight);
             }
         }
     }

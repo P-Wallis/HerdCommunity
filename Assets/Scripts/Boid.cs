@@ -61,7 +61,7 @@ public class Boid : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public virtual void CalculateAcceleration(List<Boid> flock, List<Vector2> avoidPoints = null)
+    public virtual void CalculateAcceleration(List<Boid> flock, List<AvoidPoint> avoidPoints = null)
     {
         List<Boid> localBoids = GetLocalBoids(flock);
         acceleration = Vector2.zero;
@@ -174,7 +174,7 @@ public class Boid : MonoBehaviour
         return separation;
     }
 
-    protected Vector2 GetCollisionAvoidance(List<Vector2> avoidPoints)
+    protected Vector2 GetCollisionAvoidance(List<AvoidPoint> avoidPoints)
     {
         Vector2 collision = Vector2.zero;
 
@@ -184,11 +184,11 @@ public class Boid : MonoBehaviour
             Vector2 direction;
             for (int i = 0; i < avoidPoints.Count; i++)
             {
-                distance = Vector2.Distance(position, avoidPoints[i]);
+                distance = Vector2.Distance(position, avoidPoints[i].Position);
                 if (distance < (perceptionRadius * 2))
                 {
-                    direction = (position - avoidPoints[i]).normalized;
-                    direction *= perceptionRadius / distance;
+                    direction = (position - avoidPoints[i].Position).normalized;
+                    direction *= perceptionRadius * avoidPoints[i].Weight / distance;
                     collision += direction;
                 }
             }
@@ -230,6 +230,23 @@ public class Boid : MonoBehaviour
                 position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
             if (Mathf.Abs(position.y) > bounds.y)
                 position = new Vector2(position.x, Mathf.Clamp(position.y * -1, -bounds.y, bounds.y));
+        }
+    }
+
+
+
+    public class AvoidPoint
+    {
+        public Vector2 Position { get { return (transform != null) ? new Vector2(transform.position.x, transform.position.z) : Vector2.zero; } }
+        public Vector3 WorldPosition { get { return (transform != null) ? transform.position : Vector3.zero; } }
+        private Transform transform;
+        public float Weight { get { return (transform != null) ? weight : 0; } }
+        private float weight;
+
+        public AvoidPoint(Transform transform, float weight = 1)
+        {
+            this.transform = transform;
+            this.weight = weight;
         }
     }
 }
