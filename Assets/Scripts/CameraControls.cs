@@ -4,23 +4,14 @@ using UnityEngine;
 
 public class CameraControls : MonoBehaviour
 {
-    public Player player;
-    //public Camera camera;
+    [HideInInspector] public Player player;
     [Range(0,10)] public float speed;
-    public Transform planesParent;
-
-    // lerp example:
-
-    //float first = 3;
-    //float second = 4;
-    //float blendAmount = 0.33f;
-    //float blend = ((1 - blendAmount) * first) + (blendAmount * second);
-
-
+    [HideInInspector] public Transform planesParent;
     private Renderer[] planes;
 
     private void Start()
     {
+        ReferenceManager.GetReferences(this);
         planes = planesParent.GetComponentsInChildren<Renderer>();
     }
 

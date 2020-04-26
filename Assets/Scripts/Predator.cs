@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class Predator : MonoBehaviour
 {
-	public Transform follow;
-	public Flock flock;
+    // Reference Manager Fields
+    [HideInInspector] public Transform cameraParent;
+    [HideInInspector] public Flock flock;
+
     private bool target;
 
     // Start by finding the camera to follow and copy its position
     void Start()
     {
+        ReferenceManager.GetReferences(this);
         target = false;
     }
 
     // Update its position based on the movement of the flock
     void Update()
     {
-        transform.position = follow.position + (Vector3.right * 6);
+        transform.position = cameraParent.position + (Vector3.right * 6);
        /* if (target = false) {
            transform. GetClosestEnemy(flock.boids);
         }*/
