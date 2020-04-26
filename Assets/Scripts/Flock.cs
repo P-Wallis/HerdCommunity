@@ -66,6 +66,7 @@ public class Flock : MonoBehaviour
             Boid boid = boidObject.AddComponent<Boid>();
             InitBoid(boid);
             boid.velocity = Random.insideUnitCircle * boidMaxSpeed;
+            boidObject.GetComponentInChildren<Animator>().SetFloat("RunSpeed", Random.value);
             boids.Add(boid);
         }
 
