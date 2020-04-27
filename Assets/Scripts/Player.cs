@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : Boid
 {
@@ -51,5 +52,12 @@ public class Player : Boid
 
         // Also add extra drag
         velocity = Vector2.Lerp(velocity, Vector2.zero, drag * Time.deltaTime);
+    }
+
+    public override void Kill() {
+        int sceneId = SceneManager.GetActiveScene().buildIndex;
+        Debug.Log("Player Died!!!!");
+        SceneManager.LoadScene(sceneId);
+
     }
 }
