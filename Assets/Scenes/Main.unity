@@ -523,8 +523,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1951723198}
-  speed: 3
   planesParent: {fileID: 1569580629}
+  speed: 3
 --- !u!1 &837533522
 GameObject:
   m_ObjectHideFlags: 0
