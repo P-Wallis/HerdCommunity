@@ -95,7 +95,7 @@ public class Boid : MonoBehaviour
             ConstrainToBounds();
     }
 
-    public void Kill()
+    public virtual void Kill()
     {
         bool wasMarkedForDeath = markedForDeath;
         markedForDeath = true;
