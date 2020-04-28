@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : Boid
 {
@@ -10,12 +11,11 @@ public class Player : Boid
     [Range(0f, 1f)] public float steerFactor;
     [Range(0f,10f)] public float drag;
 
-    private float boidMaxSpeed;
-
-    public override void SetParameters(float perceptionRadius, float maxSpeed, Vector2 bounds, float alignment, float cohesion, float separation)
+    public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation)
     {
-        boidMaxSpeed = maxSpeed;
-        base.SetParameters(perceptionRadius, playerMaxSpeed, bounds, alignment, cohesion, separation);
+        base.SetParameters(perceptionRadius, maxSpeed, speedVariation, bounds, alignment, cohesion, separation);
+
+        SetSpeedInRange(0.4f);
     }
 
     public override void CalculateAcceleration(List<Boid> flock, List<AvoidPoint> avoidPoints = null)
@@ -26,7 +26,7 @@ public class Player : Boid
 
         if (Input.anyKey)
         {
-            maxSpeed = playerMaxSpeed;
+            SetSpeedAbsolute(playerMaxSpeed);
 
             Vector2 direction = (velocity.magnitude > 0.001) ? velocity.normalized : Vector2.up;
             Vector2 normal = new Vector2(direction.y, -direction.x);
@@ -37,7 +37,7 @@ public class Player : Boid
         }
         else
         {
-            maxSpeed = boidMaxSpeed;
+            SetSpeedInRange(0.4f);
 
             flipByVelocity = true;
             base.CalculateAcceleration(flock, avoidPoints);
@@ -51,5 +51,12 @@ public class Player : Boid
 
         // Also add extra drag
         velocity = Vector2.Lerp(velocity, Vector2.zero, drag * Time.deltaTime);
+    }
+
+    public override void Kill() {
+        int sceneId = SceneManager.GetActiveScene().buildIndex;
+        Debug.Log("Player Died!!!!");
+        SceneManager.LoadScene(sceneId);
+
     }
 }

@@ -4,23 +4,16 @@ using UnityEngine;
 
 public class CameraControls : MonoBehaviour
 {
-    public Player player;
-    //public Camera camera;
+    // Reference Manager Fields
+    [HideInInspector] public Player player;
+    [HideInInspector] public Transform planesParent;
+
     [Range(0,10)] public float speed;
-    public Transform planesParent;
-
-    // lerp example:
-
-    //float first = 3;
-    //float second = 4;
-    //float blendAmount = 0.33f;
-    //float blend = ((1 - blendAmount) * first) + (blendAmount * second);
-
-
     private Renderer[] planes;
 
     private void Start()
     {
+        ReferenceManager.GetReferences(this);
         planes = planesParent.GetComponentsInChildren<Renderer>();
     }
 
@@ -39,7 +32,7 @@ public class CameraControls : MonoBehaviour
         transform.rotation = Quaternion.Lerp(currentRotation, targetCameraRotation, t);
 
         // Update Ground Plane Textures
-        planesParent.position = new Vector3(transform.position.x, -0.2f, transform.position.z);
+        planesParent.position = new Vector3(transform.position.x, -0.05f, transform.position.z);
         Vector2 offset = new Vector2(transform.position.x, transform.position.z) / -3;
         foreach (Renderer r in planes)
             r.material.SetTextureOffset("_MainTex", offset);
