@@ -24,6 +24,7 @@ public class Flock : MonoBehaviour
     [Header("Boid Parameters")]
     [Range(0.01f, 10)] public float boidPerceptionRadius = 1;
     [Range(0.01f, 20)] public float boidMaxSpeed = 1;
+    [Range(0f, 1f)] public float boidSpeedVariation = 0.5f;
     [Range(0f, 2f)] public float boidAlignment = 1;
     [Range(0f, 2f)] public float boidCohesion = 1;
     [Range(0f, 2f)] public float boidSeparation = 1;
@@ -71,7 +72,6 @@ public class Flock : MonoBehaviour
             Boid boid = boidObject.AddComponent<Boid>();
             InitBoid(boid);
             boid.velocity = Random.insideUnitCircle * boidMaxSpeed;
-            boidObject.GetComponentInChildren<Animator>().SetFloat("RunSpeed", Random.value);
             boids.Add(boid);
         }
 
@@ -121,7 +121,7 @@ public class Flock : MonoBehaviour
 
     private void SetBoidBehaviorParameters(Boid boid)
     {
-        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, new Vector2(boundsX, boundsY), boidAlignment, boidCohesion, boidSeparation);
+        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, boidSpeedVariation, new Vector2(boundsX, boundsY), boidAlignment, boidCohesion, boidSeparation);
     }
 
     private Vector3 GetRandomXZPosition(float radius)

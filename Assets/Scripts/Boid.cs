@@ -15,12 +15,15 @@ public class Boid : MonoBehaviour
 
     protected float perceptionRadius;
     protected float maxSpeed;
+    protected float speedVariation;
+    protected float currentSpeed;
     protected float alignmentFactor;
     protected float cohesionFactor;
     protected float separationFactor;
     protected Flock flock;
     protected bool flipByVelocity = true;
     protected Vector3 scale;
+    protected Animator animator;
 
     private Transform cameraTransform;
     private Transform cameraParent;
@@ -39,17 +42,22 @@ public class Boid : MonoBehaviour
         cameraParent = cameraTransform != null ? cameraTransform.parent : null;
         scale = transform.localScale;
         this.deathParticles = deathParticles;
+
+        animator = GetComponentInChildren<Animator>();
     }
 
-    public virtual void SetParameters(float perceptionRadius, float maxSpeed, Vector2 bounds, float alignment, float cohesion, float separation)
+    public virtual void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation)
     {
         this.perceptionRadius = perceptionRadius;
         this.maxSpeed = maxSpeed;
+        this.speedVariation = speedVariation;
         this.bounds = bounds;
 
         alignmentFactor = alignment;
         cohesionFactor = cohesion;
         separationFactor = separation;
+
+        SetSpeedInRange(Random.value);
     }
 
     public virtual void PerformDeathActions()
@@ -78,9 +86,9 @@ public class Boid : MonoBehaviour
         velocity += acceleration * Time.deltaTime;
 
         // Limit the velocity to max speed
-        if (velocity.magnitude > maxSpeed)
+        if (velocity.magnitude > currentSpeed)
         {
-            velocity = velocity.normalized * maxSpeed;
+            velocity = velocity.normalized * currentSpeed;
         }
 
         // Rotate to face movement direction
@@ -233,6 +241,23 @@ public class Boid : MonoBehaviour
         }
     }
 
+    protected void SetSpeedInRange(float new0to1Speed)
+    {
+        float halfVariation = speedVariation / 2f;
+        float newSpeed = Mathf.Clamp01(new0to1Speed);
+        currentSpeed = Mathf.Lerp(maxSpeed * (1 - halfVariation), maxSpeed * (1 + halfVariation), newSpeed);
+        if (animator != null)
+            animator.SetFloat("RunSpeed", newSpeed);
+    }
+
+    protected void SetSpeedAbsolute(float newAbsoluteSpeed)
+    {
+        float halfVariation = speedVariation / 2f;
+        float newSpeed = Mathf.Clamp01(((newAbsoluteSpeed/maxSpeed) - 1 + halfVariation)/speedVariation);
+        currentSpeed = newAbsoluteSpeed;
+        if (animator != null)
+            animator.SetFloat("RunSpeed", newSpeed);
+    }
 
 
     public class AvoidPoint
