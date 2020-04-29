@@ -11,9 +11,9 @@ public class Player : Boid
     [Range(0f, 1f)] public float steerFactor;
     [Range(0f,10f)] public float drag;
 
-    public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation)
+    public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation, Transform levelGoal)
     {
-        base.SetParameters(perceptionRadius, maxSpeed, speedVariation, bounds, alignment, cohesion, separation);
+        base.SetParameters(perceptionRadius, maxSpeed, speedVariation, bounds, alignment, cohesion, separation, levelGoal);
 
         SetSpeedInRange(0.4f);
     }

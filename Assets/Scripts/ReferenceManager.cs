@@ -12,6 +12,7 @@ public class ReferenceManager : MonoBehaviour
     public Camera mainCamera;
     public Transform cameraParent;
     public Transform planesParent;
+    public Transform levelGoal;
 
     [Header("Prefab References")]
     public GameObject boidPrefab;
