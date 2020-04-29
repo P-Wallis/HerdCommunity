@@ -59,7 +59,7 @@ public class ReferenceManager : MonoBehaviour
             field = targetType.GetField(reference.name);
             if (field != null && field.FieldType == reference.type)
             {
-                if (errorOnNullRef && reference.value == null)
+                if (errorOnNullRef && reference.value.Equals(null))
                     Debug.LogError("Reference Manager Field Assignment Failed: reference for '" + reference.name + "' is null");
 
                 field.SetValue(target, reference.value);
@@ -85,8 +85,10 @@ public class ReferenceManager : MonoBehaviour
 
             references.Add(reference);
 
-            if (reference.value == null)
+            if (reference.value.Equals(null))
+            {
                 Debug.LogWarning("Reference Manager: reference for '" + reference.name + "' is null - this will probably cause errors");
+            }
         }
     }
 

@@ -313,6 +313,7 @@ MonoBehaviour:
   mainCamera: {fileID: 519420031}
   cameraParent: {fileID: 642527633}
   planesParent: {fileID: 1569580629}
+  levelGoal: {fileID: 665260024}
   boidPrefab: {fileID: 3850513472683214811, guid: d8377afabe09e469b94954fc501a9476,
     type: 3}
   bloodParticlesPrefab: {fileID: 1019380434884352037, guid: 203700d6b47104c8e8812c55384b36b1,
@@ -557,6 +558,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aefc52b2d06b943dab917ec8962202ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  goalTimeMins: 10
+  goalDevation: 10
+  dectionRadius: 10
+  numberOfPoints: 10
 --- !u!135 &665260021
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -666,12 +672,13 @@ MonoBehaviour:
     type: 3}
   player: {fileID: 1951723198}
   mainCamera: {fileID: 0}
+  levelGoal: {fileID: 0}
   avoidTransforms: []
   flockSize: 100
   boundsX: 6
   boundsY: 14
   startRadius: 3
-  constrainBoidsToBounds: 1
+  constrainBoidsToBounds: 0
   boidPerceptionRadius: 3
   boidMaxSpeed: 2
   boidSpeedVariation: 0.5
@@ -1143,7 +1150,7 @@ PrefabInstance:
     - target: {fileID: 5982551785067585321, guid: a63dc1814e0024ba3912a3ba2c091c58,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3
+      value: 7.63
       objectReference: {fileID: 0}
     - target: {fileID: 5982551785067585321, guid: a63dc1814e0024ba3912a3ba2c091c58,
         type: 3}
@@ -1197,8 +1204,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5982551785067585326, guid: a63dc1814e0024ba3912a3ba2c091c58,
         type: 3}
-      propertyPath: stalkingTime
-      value: 0.5
+      propertyPath: boidFear
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a63dc1814e0024ba3912a3ba2c091c58, type: 3}
