@@ -10,6 +10,7 @@ public class Flock : MonoBehaviour
     [HideInInspector] public GameObject bloodParticlesPrefab;
     [HideInInspector] public Player player;
     [HideInInspector] public Camera mainCamera;
+    [HideInInspector] public Transform levelGoal;
 
     [Header("Object References")]
     public List<Transform> avoidTransforms;
@@ -121,7 +122,7 @@ public class Flock : MonoBehaviour
 
     private void SetBoidBehaviorParameters(Boid boid)
     {
-        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, boidSpeedVariation, new Vector2(boundsX, boundsY), boidAlignment, boidCohesion, boidSeparation);
+        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, boidSpeedVariation, new Vector2(boundsX, boundsY), boidAlignment, boidCohesion, boidSeparation, levelGoal);
     }
 
     private Vector3 GetRandomXZPosition(float radius)

@@ -29,6 +29,7 @@ public class Boid : MonoBehaviour
     private Transform cameraParent;
     private bool markedForDeath = false;
     private GameObject deathParticles;
+    private Transform levelGoal;
 
     private void OnMouseDown()
     {
@@ -46,12 +47,13 @@ public class Boid : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
-    public virtual void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation)
+    public virtual void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation, Transform levelGoal)
     {
         this.perceptionRadius = perceptionRadius;
         this.maxSpeed = maxSpeed;
         this.speedVariation = speedVariation;
         this.bounds = bounds;
+        this.levelGoal = levelGoal;
 
         alignmentFactor = alignment;
         cohesionFactor = cohesion;
@@ -77,6 +79,7 @@ public class Boid : MonoBehaviour
         acceleration += GetCohesion(localBoids) * cohesionFactor;
         acceleration += GetSeparation(localBoids) * separationFactor;
         acceleration += GetCollisionAvoidance(avoidPoints);
+        acceleration += GetGoalAttaction();
     }
 
     public virtual void DoMovement()
@@ -202,6 +205,14 @@ public class Boid : MonoBehaviour
             }
         }
         return collision;
+    }
+
+    protected Vector2 GetGoalAttaction()
+    {
+        Vector2 goalPosition = new Vector2(levelGoal.position.x, levelGoal.position.z);
+        Vector2 goalDirection = (goalPosition - position).normalized;
+
+        return goalDirection;
     }
 
     private void ConstrainToBounds()

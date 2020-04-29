@@ -50,9 +50,11 @@ public class Predator : MonoBehaviour
                 currentState = EnemyState.eatting;
                 break;
             }
-            case EnemyState.eatting: currentState = EnemyState.stalking; break;
-        
-    }
+            case EnemyState.eatting: {
+                currentState = EnemyState.stalking; 
+                break;
+            }
+        }
 
     }
 
