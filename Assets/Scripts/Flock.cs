@@ -10,6 +10,7 @@ public class Flock : MonoBehaviour
     [HideInInspector] public GameObject bloodParticlesPrefab;
     [HideInInspector] public Player player;
     [HideInInspector] public Camera mainCamera;
+    [HideInInspector] public Transform levelGoal;
 
     [Header("Object References")]
     public List<Transform> avoidTransforms;
@@ -44,10 +45,10 @@ public class Flock : MonoBehaviour
     {
         if (avoidPoints != null && avoidPoints.Count>0)
         {
-            Gizmos.color = Color.blue;
             for (int i = 0; i < avoidPoints.Count; i++)
             {
-                Gizmos.DrawSphere(avoidPoints[i].WorldPosition, .5f * avoidPoints[i].Weight);
+                Gizmos.color = avoidPoints[i].Weight < 0.01f ? Color.gray : Color.Lerp(Color.blue, Color.red, avoidPoints[i].Weight);
+                Gizmos.DrawSphere(avoidPoints[i].WorldPosition, 0.5f);
             }
         }
 
@@ -115,13 +116,21 @@ public class Flock : MonoBehaviour
 
     private void InitBoid(Boid boid)
     {
-        boid.Init(this, mainCamera, bloodParticlesPrefab);
+        boid.Init(this, mainCamera, bloodParticlesPrefab, levelGoal);
         SetBoidBehaviorParameters(boid);
     }
 
     private void SetBoidBehaviorParameters(Boid boid)
     {
-        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, boidSpeedVariation, new Vector2(boundsX, boundsY), boidAlignment, boidCohesion, boidSeparation);
+        boid.SetParameters(
+            boidPerceptionRadius,
+            boidMaxSpeed,
+            boidSpeedVariation,
+            new Vector2(boundsX, boundsY),
+            boidAlignment,
+            boidCohesion,
+            boidSeparation
+            );
     }
 
     private Vector3 GetRandomXZPosition(float radius)
@@ -165,8 +174,10 @@ public class Flock : MonoBehaviour
         */
     }
 
-    public void AddAvoidPoint(Transform transform, float weight = 1)
+    public AvoidPoint AddAvoidPoint(Transform transform, float weight = 1)
     {
-        avoidPoints.Add(new AvoidPoint(transform, weight));
+        AvoidPoint avoidPoint = new AvoidPoint(transform, weight);
+        avoidPoints.Add(avoidPoint);
+        return avoidPoint;
     }
 }

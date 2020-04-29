@@ -11,7 +11,8 @@ public class Player : Boid
     [Range(0f, 1f)] public float steerFactor;
     [Range(0f,10f)] public float drag;
 
-    public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation)
+    public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds,
+        float alignment, float cohesion, float separation)
     {
         base.SetParameters(perceptionRadius, maxSpeed, speedVariation, bounds, alignment, cohesion, separation);
 
@@ -53,10 +54,11 @@ public class Player : Boid
         velocity = Vector2.Lerp(velocity, Vector2.zero, drag * Time.deltaTime);
     }
 
-    public override void Kill() {
+    public override void Kill()
+    {
+        velocity = Vector2.zero;
         int sceneId = SceneManager.GetActiveScene().buildIndex;
         Debug.Log("Player Died!!!!");
         SceneManager.LoadScene(sceneId);
-
     }
 }
