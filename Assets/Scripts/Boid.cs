@@ -24,36 +24,32 @@ public class Boid : MonoBehaviour
     protected bool flipByVelocity = true;
     protected Vector3 scale;
     protected Animator animator;
+    protected bool markedForDeath = false;
 
     private Transform cameraTransform;
     private Transform cameraParent;
-    private bool markedForDeath = false;
     private GameObject deathParticles;
     private Transform levelGoal;
 
-    private void OnMouseDown()
-    {
-        Kill(); // Just for testing, kill the gazelle when it's clicked
-    }
-
-    public virtual void Init(Flock flock, Camera camera, GameObject deathParticles)
+    public virtual void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)
     {
         this.flock = flock;
         cameraTransform = camera!=null ? camera.transform : null;
         cameraParent = cameraTransform != null ? cameraTransform.parent : null;
         scale = transform.localScale;
         this.deathParticles = deathParticles;
+        this.levelGoal = levelGoal;
 
         animator = GetComponentInChildren<Animator>();
     }
 
-    public virtual void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation, Transform levelGoal)
+    public virtual void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds,
+        float alignment, float cohesion, float separation)
     {
         this.perceptionRadius = perceptionRadius;
         this.maxSpeed = maxSpeed;
         this.speedVariation = speedVariation;
         this.bounds = bounds;
-        this.levelGoal = levelGoal;
 
         alignmentFactor = alignment;
         cohesionFactor = cohesion;
@@ -110,6 +106,7 @@ public class Boid : MonoBehaviour
     {
         bool wasMarkedForDeath = markedForDeath;
         markedForDeath = true;
+        velocity = Vector2.zero;
 
         if (!wasMarkedForDeath)
             flock.KillBoid(this);
@@ -276,7 +273,7 @@ public class Boid : MonoBehaviour
         public Vector2 Position { get { return (transform != null) ? new Vector2(transform.position.x, transform.position.z) : Vector2.zero; } }
         public Vector3 WorldPosition { get { return (transform != null) ? transform.position : Vector3.zero; } }
         private Transform transform;
-        public float Weight { get { return (transform != null) ? weight : 0; } }
+        public float Weight { get { return (transform != null) ? weight : 0; } set { weight = value; } }
         private float weight;
 
         public AvoidPoint(Transform transform, float weight = 1)

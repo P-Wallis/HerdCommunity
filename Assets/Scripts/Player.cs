@@ -14,9 +14,10 @@ public class Player : Boid
 
     public GameManager gameManager;
 
-    public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation, Transform levelGoal)
+    public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds,
+        float alignment, float cohesion, float separation)
     {
-        base.SetParameters(perceptionRadius, maxSpeed, speedVariation, bounds, alignment, cohesion, separation, levelGoal);
+        base.SetParameters(perceptionRadius, maxSpeed, speedVariation, bounds, alignment, cohesion, separation);
 
         SetSpeedInRange(0.4f);
     }
@@ -59,6 +60,7 @@ public class Player : Boid
     public override void Kill()
     {
         //FindObjectOfType<GameManager>().EndGame();
+        velocity = Vector2.zero;
         gameManager.EndGame();
     }
 }

@@ -141,6 +141,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraParent: {fileID: 0}
   flock: {fileID: 0}
+  stalkingTime: 1
+  targetResetTime: 0.5
+  attackingTime: 0.5
+  maxEatingTime: 2
+  chaseSpeed: 4
+  retreatSpeed: 3
+  boidFear: 2
+  visuals:
+  - {fileID: 1903355579105458235}
+  - {fileID: 4596916501776029795}
 --- !u!1001 &4152665494131305599
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -225,6 +235,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf6bed21b363742ea9877dd1523f7cd2, type: 3}
+--- !u!1 &4596916501776029795 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 462389101229388828, guid: bf6bed21b363742ea9877dd1523f7cd2,
+    type: 3}
+  m_PrefabInstance: {fileID: 4152665494131305599}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &689295843918555760 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3472809301177583119, guid: bf6bed21b363742ea9877dd1523f7cd2,

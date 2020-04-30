@@ -4,24 +4,26 @@ using UnityEngine;
 
 public class LevelGoal : MonoBehaviour
 {
+    // Reference Manager Field
+    [HideInInspector] public Player player;
+    [HideInInspector] public GameManager gameManager;
 
-    [Range(0f, 1f)] public float goalTimeMins = 0.5f;
+    // Inspector Fields
+    [Range(0f, 20f)] public float goalTimeMins = 10;
 	[Range(0f, 20f)] public float goalDevation = 10;
 	[Range(0f, 20f)] public float dectionRadius = 10;
 
     [Range(0, 20)] public int numberOfPoints = 10;
 
-	public Player player;
-    public GameManager gameManager;
-
+    // Private Variables
 	private List<Vector3> goals = new List<Vector3>();
 	private int currentGoalIndex = -1;
-
 
     void Start()
     {
     	ReferenceManager.GetReferences(this);
-    	float goalDistance = (goalTimeMins*60)*player.playerMaxSpeed;
+
+    	float goalDistance = goalTimeMins*60*player.playerMaxSpeed;
     	Vector2 goalDirection = Random.insideUnitCircle.normalized;
         Vector3 levelGoal = new Vector3(goalDirection.x, 0, goalDirection.y)*goalDistance;
         Vector3 normalDirection = new Vector3(goalDirection.y, 0, -goalDirection.x);
@@ -50,6 +52,7 @@ public class LevelGoal : MonoBehaviour
         float playerDistance = Vector3.Distance(player.transform.position, goals[currentGoalIndex]);
         if(playerDistance < dectionRadius){
         	if(currentGoalIndex == goals.Count-1){
+                player.velocity = Vector2.zero;
                 gameManager.CompleteLevel();
             }
         	else ChangePosition();
