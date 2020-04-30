@@ -459,10 +459,17 @@ MonoBehaviour:
   - name: Tree
     prefab: {fileID: 6260318897814988628, guid: d857575285d654e35b7086c493a5ce79,
       type: 3}
-    count: 8
+    count: 3
     randomizeRotation: 1
     addToHerdAvoidList: 1
     avoidanceWeight: 0.25
+  - name: Shrub
+    prefab: {fileID: 7834691707751968985, guid: 5e4592c717c24455d8925d8298c81e24,
+      type: 3}
+    count: 6
+    randomizeRotation: 1
+    addToHerdAvoidList: 1
+    avoidanceWeight: 0.5
 --- !u!4 &599703266
 Transform:
   m_ObjectHideFlags: 0
