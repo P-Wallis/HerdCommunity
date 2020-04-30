@@ -31,11 +31,6 @@ public class Boid : MonoBehaviour
     private GameObject deathParticles;
     private Transform levelGoal;
 
-    private void OnMouseDown()
-    {
-        Kill(); // Just for testing, kill the gazelle when it's clicked
-    }
-
     public virtual void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)
     {
         this.flock = flock;
