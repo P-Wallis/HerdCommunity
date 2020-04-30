@@ -20,6 +20,7 @@ public class Predator : MonoBehaviour
 
     // Inspector Fields
     public float stalkingTime = 60;
+    public float targetResetTime = 0.5f;
     public float attackingTime = 1;
     public float maxEatingTime = 2;
     public float chaseSpeed = 5;
@@ -66,17 +67,18 @@ public class Predator : MonoBehaviour
 
                     currentState = EnemyState.targeting;
                 }
-                break;
+            break;
             }
             case EnemyState.targeting:{
-                if (target == null) {
+                if (target == null || UpdateTimer(targetResetTime)) {
                     target = GetClosestEnemy(flock.boids);
                 }
                 if (MoveTowardPosition(target.position, 0.2f))
                 {
+                    ResetTimer(); // in case we're in between target searches, reset the timer
                     currentState = EnemyState.attacking;
                 }
-              break;
+            break;
             }
             case EnemyState.attacking: {
                 if (target != null)
@@ -100,7 +102,7 @@ public class Predator : MonoBehaviour
                 {
                     ShowVisuals(false);
                     boidAvoid.Weight = 0; // We're invisible, so boids shouldn't flee
-                    timer = 0; // in case we got to our destination early, reset the timer
+                    ResetTimer(); // in case we got to our destination early, reset the timer
 
                     currentState = EnemyState.stalking;
                 }
@@ -126,6 +128,11 @@ public class Predator : MonoBehaviour
         }
 
         return bestTarget;
+    }
+
+    void ResetTimer()
+    {
+        timer = 0;
     }
 
     bool UpdateTimer(float endTime)

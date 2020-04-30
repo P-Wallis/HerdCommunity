@@ -141,10 +141,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraParent: {fileID: 0}
   flock: {fileID: 0}
-  stalkingTime: 0.5
+  stalkingTime: 1
+  targetResetTime: 0.5
   attackingTime: 0.5
+  maxEatingTime: 2
   chaseSpeed: 4
   retreatSpeed: 3
+  boidFear: 2
   visuals:
   - {fileID: 1903355579105458235}
   - {fileID: 4596916501776029795}
