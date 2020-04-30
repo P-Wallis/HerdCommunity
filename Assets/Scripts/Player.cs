@@ -5,11 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class Player : Boid
 {
-    [Range(0f, 10f)] public float playerMaxSpeed;
     [Range(0f, 1f)] public float accelerateFactor;
     [Range(0f, 1f)] public float brakeFactor;
     [Range(0f, 1f)] public float steerFactor;
-    [Range(0f,10f)] public float drag;
+
+    [Range(0f, 10f)] public float playerMaxSpeed;
+    [Range(0f, 10f)] public float drag;
+
+    public GameManager gameManager;
 
     public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds, float alignment, float cohesion, float separation, Transform levelGoal)
     {
@@ -53,10 +56,9 @@ public class Player : Boid
         velocity = Vector2.Lerp(velocity, Vector2.zero, drag * Time.deltaTime);
     }
 
-    public override void Kill() {
-        int sceneId = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log("Player Died!!!!");
-        SceneManager.LoadScene(sceneId);
-
+    public override void Kill()
+    {
+        //FindObjectOfType<GameManager>().EndGame();
+        gameManager.EndGame();
     }
 }

@@ -5,15 +5,19 @@ using UnityEngine;
 public class LevelGoal : MonoBehaviour
 {
 
-	[Range(0f, 20f)] public float goalTimeMins = 10;
+    [Range(0f, 1f)] public float goalTimeMins = 0.5f;
 	[Range(0f, 20f)] public float goalDevation = 10;
 	[Range(0f, 20f)] public float dectionRadius = 10;
-	[Range(0, 20)] public int numberOfPoints = 10;
+
+    [Range(0, 20)] public int numberOfPoints = 10;
 
 	public Player player;
+    public GameManager gameManager;
+
 	private List<Vector3> goals = new List<Vector3>();
 	private int currentGoalIndex = -1;
-    // Start is called before the first frame update
+
+
     void Start()
     {
     	ReferenceManager.GetReferences(this);
@@ -46,8 +50,8 @@ public class LevelGoal : MonoBehaviour
         float playerDistance = Vector3.Distance(player.transform.position, goals[currentGoalIndex]);
         if(playerDistance < dectionRadius){
         	if(currentGoalIndex == goals.Count-1){
-        		Debug.Log("YOU WIN!!!!!");
-        	}
+                gameManager.CompleteLevel();
+            }
         	else ChangePosition();
         }
     }
