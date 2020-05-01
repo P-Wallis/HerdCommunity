@@ -359,6 +359,7 @@ MonoBehaviour:
   cameraParent: {fileID: 642527633}
   planesParent: {fileID: 1569580629}
   levelGoal: {fileID: 665260024}
+  gameManager: {fileID: 73785392}
   boidPrefab: {fileID: 3850513472683214811, guid: d8377afabe09e469b94954fc501a9476,
     type: 3}
   bloodParticlesPrefab: {fileID: 1019380434884352037, guid: 203700d6b47104c8e8812c55384b36b1,

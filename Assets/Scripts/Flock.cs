@@ -12,9 +12,6 @@ public class Flock : MonoBehaviour
     [HideInInspector] public Camera mainCamera;
     [HideInInspector] public Transform levelGoal;
 
-    [Header("Object References")]
-    public List<Transform> avoidTransforms;
-
     [Header("Flock Parameters")]
     [Range(1,100)] public int flockSize = 1;
     [Range(0f, 20f)] public float boundsX = 10;
@@ -81,8 +78,6 @@ public class Flock : MonoBehaviour
             InitBoid(player);
             boids.Add(player);
         }
-
-        AddAvoidPointsFromTransforms();
     }
 
     private void Update()
@@ -147,31 +142,6 @@ public class Flock : MonoBehaviour
         Color randomColor = Random.ColorHSV(0, .2f, 0, .25f, 0f, 1f);
         foreach (Renderer r in renderers)
             r.material.color = randomColor;
-    }
-
-    private void AddAvoidPointsFromTransforms()
-    {
-        if (avoidTransforms.Count < 1)
-            return;
-
-        for (int i = 0; i < avoidTransforms.Count; i++)
-        {
-            if (avoidTransforms[i] == null)
-                continue;
-
-            avoidPoints.Add(new AvoidPoint(avoidTransforms[i], 1));
-        }
-
-        /*
-        // Testing Collision Circle 
-        const float r = 20f;
-        int num = Mathf.CeilToInt(Mathf.PI * 0.5f * r * boidPerceptionRadius);
-        for (int i = 0; i < num; i++)
-        {
-            float theta = (2f * Mathf.PI * i) / num;
-            points.Add(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)) * r);
-        }
-        */
     }
 
     public AvoidPoint AddAvoidPoint(Transform transform, float weight = 1)
