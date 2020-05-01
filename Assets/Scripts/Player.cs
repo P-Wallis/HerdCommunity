@@ -5,11 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class Player : Boid
 {
-    [Range(0f, 10f)] public float playerMaxSpeed;
     [Range(0f, 1f)] public float accelerateFactor;
     [Range(0f, 1f)] public float brakeFactor;
     [Range(0f, 1f)] public float steerFactor;
-    [Range(0f,10f)] public float drag;
+
+    [Range(0f, 10f)] public float playerMaxSpeed;
+    [Range(0f, 10f)] public float drag;
+
+    [HideInInspector] public GameManager gameManager;
+    public override void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)
+    {
+        base.Init(flock, camera, deathParticles, levelGoal);
+        ReferenceManager.GetReferences(this);
+    }
 
     public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds,
         float alignment, float cohesion, float separation)
@@ -56,9 +64,8 @@ public class Player : Boid
 
     public override void Kill()
     {
+        //FindObjectOfType<GameManager>().EndGame();
         velocity = Vector2.zero;
-        int sceneId = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log("Player Died!!!!");
-        SceneManager.LoadScene(sceneId);
+        gameManager.EndGame();
     }
 }

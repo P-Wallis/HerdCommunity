@@ -6,12 +6,14 @@ public class LevelGoal : MonoBehaviour
 {
     // Reference Manager Field
     [HideInInspector] public Player player;
+    [HideInInspector] public GameManager gameManager;
 
     // Inspector Fields
     [Range(0f, 20f)] public float goalTimeMins = 10;
 	[Range(0f, 20f)] public float goalDevation = 10;
 	[Range(0f, 20f)] public float dectionRadius = 10;
-	[Range(0, 20)] public int numberOfPoints = 10;
+
+    [Range(0, 20)] public int numberOfPoints = 10;
 
     // Private Variables
 	private List<Vector3> goals = new List<Vector3>();
@@ -50,8 +52,9 @@ public class LevelGoal : MonoBehaviour
         float playerDistance = Vector3.Distance(player.transform.position, goals[currentGoalIndex]);
         if(playerDistance < dectionRadius){
         	if(currentGoalIndex == goals.Count-1){
-        		Debug.Log("YOU WIN!!!!!");
-        	}
+                player.velocity = Vector2.zero;
+                gameManager.CompleteLevel();
+            }
         	else ChangePosition();
         }
     }
