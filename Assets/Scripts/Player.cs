@@ -12,7 +12,12 @@ public class Player : Boid
     [Range(0f, 10f)] public float playerMaxSpeed;
     [Range(0f, 10f)] public float drag;
 
-    public GameManager gameManager;
+    [HideInInspector] public GameManager gameManager;
+    public override void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)
+    {
+        base.Init(flock, camera, deathParticles, levelGoal);
+        ReferenceManager.GetReferences(this);
+    }
 
     public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds,
         float alignment, float cohesion, float separation)
