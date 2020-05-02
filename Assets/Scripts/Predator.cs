@@ -10,10 +10,19 @@ public enum EnemyState {
     stopped
 }
 
+public enum EnemyAttackSubState
+{
+    start,
+    lunging,
+    pouncing,
+    end
+}
+
 public class Predator : MonoBehaviour
 {
     // Constants
-    const string attackAnimBool = "IsAttacking";
+    const string isAttackAnimBool = "IsAttacking";
+    const string attackHitAnimTrigger = "AttackHit";
 
     // Reference Manager Fields
     [HideInInspector] public Transform cameraParent;
@@ -24,8 +33,11 @@ public class Predator : MonoBehaviour
     public float stalkingTime = 60;
     public float targetResetTime = 0.5f;
     public float attackRadius = 0.5f;
+    public float pounceRadius = 0.2f;
+    public float killRadius = 0f;
     public float attackingTime = 1;
-    public float maxEatingTime = 2;
+    public float maxLungingTime = 0.66f;
+    public float maxRetreatingTime = 2;
     public float chaseSpeed = 5;
     public float retreatSpeed = 2;
     [Range(0,5)]public float boidFear = 1;
@@ -33,7 +45,9 @@ public class Predator : MonoBehaviour
 
     // Private Variables
     private EnemyState currentState = EnemyState.stalking;
+    private EnemyAttackSubState attackSubState = EnemyAttackSubState.start;
     private float timer = 0;
+    private float attackTimer = 0;
     private float speed = 1f;
     private Boid target;
     private float startPointX;
@@ -91,21 +105,41 @@ public class Predator : MonoBehaviour
             case EnemyState.attacking: {
                 if (target != null)
                 {
-                    animator.SetBool(attackAnimBool, true);
-                    if (MoveTowardPosition(target.position, .2f, false))
+                    switch (attackSubState)
                     {
-                        target.Kill();
-                        target = null;
+                        case EnemyAttackSubState.start:
+                            animator.SetBool(isAttackAnimBool, true);
+                            attackSubState = EnemyAttackSubState.lunging;
+                            break;
+                        case EnemyAttackSubState.lunging:
+                            if (MoveTowardPosition(target.position, pounceRadius, false) || UpdateAttackTimer(maxLungingTime))
+                            {
+                                ResetAttackTimer();
+                                animator.SetTrigger(attackHitAnimTrigger);
+                                attackSubState = EnemyAttackSubState.pouncing;
+                            }
+                            break;
+                        case EnemyAttackSubState.pouncing:
+                            if (MoveTowardPosition(target.position, killRadius, false))
+                            {
+                                target.Kill();
+                                target = null;
+                                attackSubState = EnemyAttackSubState.end;
+                            }
+                            break;
+                        case EnemyAttackSubState.end:
+                            break;
                     }
                 }
                 if (UpdateTimer(attackingTime))
                 {
+                    attackSubState = EnemyAttackSubState.start; // reset substate when exiting
                     GoToRetreatState();
                 }
                 break;
             }
             case EnemyState.retreating: {
-                if (MoveTowardPosition(GetStartPoint()) || UpdateTimer(maxEatingTime))
+                if (MoveTowardPosition(GetStartPoint()) || UpdateTimer(maxRetreatingTime))
                 {
                     ShowVisuals(false);
                     boidAvoid.Weight = 0; // We're invisible, so boids shouldn't flee
@@ -126,7 +160,7 @@ public class Predator : MonoBehaviour
             ResetTimer(); // reset the timer, in case we jumpted to this state while timers were running
 
         speed = retreatSpeed;
-        animator.SetBool(attackAnimBool, false);
+        animator.SetBool(isAttackAnimBool, false);
         boidAvoid.Weight = .1f;
 
         currentState = EnemyState.retreating;
@@ -162,6 +196,23 @@ public class Predator : MonoBehaviour
         if (timer >= endTime)
         {
             timer = 0; // Reset when done
+            return true;
+        }
+        return false;
+    }
+
+    void ResetAttackTimer()
+    {
+        attackTimer = 0;
+    }
+
+    bool UpdateAttackTimer(float endTime)
+    {
+        attackTimer += Time.deltaTime;
+
+        if (attackTimer >= endTime)
+        {
+            attackTimer = 0; // Reset when done
             return true;
         }
         return false;
