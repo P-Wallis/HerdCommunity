@@ -144,9 +144,12 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   stalkingTime: 1
   targetResetTime: 0.5
-  attackRadius: 0.8
-  attackingTime: 0.6
-  maxEatingTime: 2
+  attackRadius: 1
+  pounceRadius: 0.8
+  killRadius: 0.2
+  attackingTime: 1.217
+  maxLungingTime: 0.33
+  maxRetreatingTime: 2
   chaseSpeed: 4
   retreatSpeed: 3
   boidFear: 2
