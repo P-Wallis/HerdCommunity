@@ -14,8 +14,6 @@ public class Player : Boid
 
     [HideInInspector] public float facingAngle = 0;
 
-    bool allowInput = true;
-
     public override void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)
     {
         base.Init(flock, camera, deathParticles, levelGoal);
@@ -32,34 +30,42 @@ public class Player : Boid
 
     public override void CalculateAcceleration(List<Boid> flock, List<AvoidPoint> avoidPoints = null)
     {
-        // Get Input
-        float accelerate = allowInput ? Input.GetAxisRaw("Vertical") : 0;
-        float steer = allowInput ? Input.GetAxisRaw("Horizontal") : 0;
+        if (gameManager.GameWon)
+        {
+            // After winning, just follow the herd
+            SetSpeedInRange(0.4f);
+            base.CalculateAcceleration(flock, avoidPoints);
+        }
+        else
+        { 
+            // Get Input
+            float accelerate = gameManager.GameEnded ? 0 : Input.GetAxisRaw("Vertical");
+            float steer = gameManager.GameEnded ? 0 : Input.GetAxisRaw("Horizontal");
 
-        // Do steering
-        facingAngle = ConstrainToAngleRange(facingAngle + (steer * steerRate * Time.deltaTime));
+            // Do steering
+            facingAngle = ConstrainToAngleRange(facingAngle + (steer * steerRate * Time.deltaTime));
 
-        // Update velocity based on steering
-        Vector2 direction = GetDirectionFromAngle(facingAngle);
-        float speed = velocity.magnitude;
-        if (speed > .5f)
-            velocity = speed * direction; // only update velocity if it's not tiny (to prevent the zebra sliding around oddly)
+            // Update velocity based on steering
+            Vector2 direction = GetDirectionFromAngle(facingAngle);
+            float speed = velocity.magnitude;
+            if (speed > .5f)
+                velocity = speed * direction; // only update velocity if it's not tiny (to prevent the zebra sliding around oddly)
 
-        // Set acceleration based on facing direction and accelerate button
-        acceleration = direction * Mathf.Clamp01(accelerate) * playerMaxSpeed * accelerateFactor;
+            // Set acceleration based on facing direction and accelerate button
+            acceleration = direction * Mathf.Clamp01(accelerate) * playerMaxSpeed * accelerateFactor;
 
-        // Slow down when acclelerate not pressed
-        velocity *= (accelerate <= 0) ? 1 - (drag * Time.deltaTime) : 1;
+            // Slow down when acclelerate not pressed
+            velocity *= (accelerate <= 0) ? 1 - (drag * Time.deltaTime) : 1;
 
-        // Play animation based on speed
-        animator.speed = Mathf.Clamp01(speed);
-        animator.SetFloat(runAnimationFloat, (speed-1) / (playerMaxSpeed - 1));
+            // Play animation based on speed
+            animator.speed = Mathf.Clamp01(speed);
+            animator.SetFloat(runAnimationFloat, (speed - 1) / (playerMaxSpeed - 1));
+        }
     }
 
     public override void Kill()
     {
         velocity = Vector2.zero;
-        allowInput = false;
         gameManager.EndGame();
 
         transform.GetChild(0).gameObject.SetActive(false); // turn off zebra model

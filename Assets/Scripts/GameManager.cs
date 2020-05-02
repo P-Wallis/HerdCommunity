@@ -9,8 +9,10 @@ public class GameManager : MonoBehaviour
 {
 	bool gameHasEnded = false;
     public bool GameEnded { get { return gameHasEnded; } }
+    public bool GameWon { get; private set; }
+    public bool GameLost { get; private set; }
 
-	public float restartDelay = 1f;
+    public float restartDelay = 1f;
 
     public GameObject competeLevelUI;
     public GameObject instructionsUI;
@@ -25,12 +27,15 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         restartButton.onClick.AddListener(Restart);
+        GameWon = false;
+        GameLost = false;
     }
 
     public void WinGame()
     {
         if (gameHasEnded == false)
         {
+            GameWon = true;
             StartCoroutine(ShowEndUI(successmessage));
         }
     }
@@ -39,6 +44,7 @@ public class GameManager : MonoBehaviour
 	{
         if (gameHasEnded == false)
         {
+            GameLost = true;
             StartCoroutine(ShowEndUI(failmessage));
         }
     }

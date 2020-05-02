@@ -931,6 +931,7 @@ MonoBehaviour:
   goalTimeMins: 0.51
   goalDevation: 12.5
   dectionRadius: 3
+  oasisDectionRadius: 6
   numberOfPoints: 2
 --- !u!4 &665260024
 Transform:
