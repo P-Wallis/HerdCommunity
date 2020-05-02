@@ -17,9 +17,9 @@ public class GameManager : MonoBehaviour
     public GameObject competeLevelUI;
     public GameObject instructionsUI;
     public Button restartButton;
-    public TextMeshProUGUI endMessage;
-    public string successmessage = "Escaped!";
-    public string failmessage = "Died!";
+    public Image endMessage;
+    public Sprite successmessage;
+    public Sprite failmessage;
     public RectTransform messageRT, buttonRT;
     public float animationTime = 1.5f;
     public AnimationCurve smoothCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
@@ -49,9 +49,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator ShowEndUI(string message)
+    IEnumerator ShowEndUI(Sprite message)
     {
-        endMessage.text = message;
+        endMessage.sprite = message;
         gameHasEnded = true;
         instructionsUI.SetActive(false);
         Vector2 messageEndPos = messageRT.anchoredPosition;
