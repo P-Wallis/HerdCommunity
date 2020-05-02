@@ -12,12 +12,13 @@ public class ReferenceManager : MonoBehaviour
     public Camera mainCamera;
     public Transform cameraParent;
     public Transform planesParent;
-    public Transform levelGoal;
+    public LevelGoal levelGoal;
     public GameManager gameManager;
 
     [Header("Prefab References")]
     public GameObject boidPrefab;
     public GameObject bloodParticlesPrefab;
+    public GameObject oasisPrefab;
 
     #endregion
 

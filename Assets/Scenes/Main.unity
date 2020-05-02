@@ -417,11 +417,13 @@ MonoBehaviour:
   mainCamera: {fileID: 519420031}
   cameraParent: {fileID: 642527633}
   planesParent: {fileID: 1569580629}
-  levelGoal: {fileID: 665260024}
+  levelGoal: {fileID: 665260020}
   gameManager: {fileID: 73785392}
   boidPrefab: {fileID: 3850513472683214811, guid: d8377afabe09e469b94954fc501a9476,
     type: 3}
   bloodParticlesPrefab: {fileID: 1019380434884352037, guid: 203700d6b47104c8e8812c55384b36b1,
+    type: 3}
+  oasisPrefab: {fileID: 9115717327919357637, guid: 0c7fe8458938448c499a316117d2d617,
     type: 3}
 --- !u!4 &367124821
 Transform:
@@ -783,6 +785,8 @@ MonoBehaviour:
   cameraParent: {fileID: 642527633}
   scatterAreaX: 6
   scatterAreaY: 14
+  oasisSizeX: 3
+  oasisSizeY: 2
   scatterObjects:
   - name: GrassPatch
     prefab: {fileID: 8093562805713443012, guid: 10e6f374b1244454c8f446a07e6d9e89,
@@ -923,6 +927,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   gameManager: {fileID: 73785392}
+  oasisPrefab: {fileID: 0}
   goalTimeMins: 0.51
   goalDevation: 12.5
   dectionRadius: 3
@@ -2195,11 +2200,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Predator
-      objectReference: {fileID: 0}
-    - target: {fileID: 5982551785067585317, guid: a63dc1814e0024ba3912a3ba2c091c58,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5982551785067585321, guid: a63dc1814e0024ba3912a3ba2c091c58,
         type: 3}
