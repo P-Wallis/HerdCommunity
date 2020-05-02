@@ -789,6 +789,8 @@ MonoBehaviour:
       type: 3}
     count: 100
     randomizeRotation: 1
+    randomizeScale: 1
+    scaleRandomFactor: 0.25
     addToHerdAvoidList: 0
     avoidanceWeight: 0
   - name: Tree
@@ -796,6 +798,8 @@ MonoBehaviour:
       type: 3}
     count: 3
     randomizeRotation: 1
+    randomizeScale: 1
+    scaleRandomFactor: 0.1
     addToHerdAvoidList: 1
     avoidanceWeight: 0.25
   - name: Shrub
@@ -803,8 +807,28 @@ MonoBehaviour:
       type: 3}
     count: 6
     randomizeRotation: 1
+    randomizeScale: 1
+    scaleRandomFactor: 0.5
     addToHerdAvoidList: 1
     avoidanceWeight: 0.5
+  - name: RockSet
+    prefab: {fileID: 7135749588161707780, guid: f6d65443c086e46c3820b94c2233a1b7,
+      type: 3}
+    count: 1
+    randomizeRotation: 1
+    randomizeScale: 0
+    scaleRandomFactor: 0
+    addToHerdAvoidList: 1
+    avoidanceWeight: 0.5
+  - name: RockSingle
+    prefab: {fileID: 6119851726188954473, guid: 9797bf2058b84403db4d2c4f774f3b3a,
+      type: 3}
+    count: 30
+    randomizeRotation: 1
+    randomizeScale: 1
+    scaleRandomFactor: 0.5
+    addToHerdAvoidList: 0
+    avoidanceWeight: 0
 --- !u!4 &599703266
 Transform:
   m_ObjectHideFlags: 0
@@ -2404,7 +2428,7 @@ PrefabInstance:
     - target: {fileID: 2301032067236987031, guid: 5538bd7daa254491eac661846c747b6d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.2
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 2301032067236987031, guid: 5538bd7daa254491eac661846c747b6d,
         type: 3}
