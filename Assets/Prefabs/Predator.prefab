@@ -141,9 +141,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraParent: {fileID: 0}
   flock: {fileID: 0}
+  gameManager: {fileID: 0}
   stalkingTime: 1
   targetResetTime: 0.5
-  attackingTime: 0.5
+  attackRadius: 0.65
+  attackingTime: 0.2
   maxEatingTime: 2
   chaseSpeed: 4
   retreatSpeed: 3

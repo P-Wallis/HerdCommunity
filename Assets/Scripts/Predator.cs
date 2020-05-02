@@ -23,6 +23,7 @@ public class Predator : MonoBehaviour
     // Inspector Fields
     public float stalkingTime = 60;
     public float targetResetTime = 0.5f;
+    public float attackRadius = 0.5f;
     public float attackingTime = 1;
     public float maxEatingTime = 2;
     public float chaseSpeed = 5;
@@ -75,7 +76,7 @@ public class Predator : MonoBehaviour
                 if (target == null || UpdateTimer(targetResetTime)) {
                     target = GetClosestEnemy(flock.boids);
                 }
-                if (MoveTowardPosition(target.position, 0.2f))
+                if (MoveTowardPosition(target.position, attackRadius, false))
                 {
                     ResetTimer(); // in case we're in between target searches, reset the timer
                     currentState = EnemyState.attacking;
@@ -86,10 +87,13 @@ public class Predator : MonoBehaviour
                 if (target != null)
                 {
                     animator.SetBool(attackAnimBool, true);
-                    target.Kill();
-                    target = null;
+                    if (MoveTowardPosition(target.position, .2f, false))
+                    {
+                        target.Kill();
+                        target = null;
+                    }
                 }
-                if (UpdateTimer(attackingTime))
+                else if (UpdateTimer(attackingTime))
                 {
                     speed = retreatSpeed;
                     animator.SetBool(attackAnimBool, false);
@@ -150,14 +154,15 @@ public class Predator : MonoBehaviour
         return false;
     }
 
-    bool MoveTowardPosition(Vector2 target, float detectRadius = 0)
+    bool MoveTowardPosition(Vector2 target, float detectRadius = 0, bool setPosToTarget = true)
     {
         float distance = Vector2.Distance(position, target);
         float maxMovement = speed * Time.deltaTime;
 
         if (distance <= (maxMovement+detectRadius))
         {
-            position = target;
+            if(setPosToTarget)
+                position = target;
             return true;
         }
 

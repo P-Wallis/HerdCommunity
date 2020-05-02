@@ -10,7 +10,7 @@ public class Flock : MonoBehaviour
     [HideInInspector] public GameObject bloodParticlesPrefab;
     [HideInInspector] public Player player;
     [HideInInspector] public Camera mainCamera;
-    [HideInInspector] public Transform levelGoal;
+    [HideInInspector] public LevelGoal levelGoal;
 
     [Header("Flock Parameters")]
     [Range(1,100)] public int flockSize = 1;
@@ -112,7 +112,7 @@ public class Flock : MonoBehaviour
 
     private void InitBoid(Boid boid)
     {
-        boid.Init(this, mainCamera, bloodParticlesPrefab, levelGoal);
+        boid.Init(this, mainCamera, bloodParticlesPrefab, levelGoal.transform);
         SetBoidBehaviorParameters(boid);
     }
 
