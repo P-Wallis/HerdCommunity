@@ -14,6 +14,8 @@ public class Player : Boid
 
     [HideInInspector] public float facingAngle = 0;
 
+    bool allowInput = true;
+
     public override void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)
     {
         base.Init(flock, camera, deathParticles, levelGoal);
@@ -31,8 +33,8 @@ public class Player : Boid
     public override void CalculateAcceleration(List<Boid> flock, List<AvoidPoint> avoidPoints = null)
     {
         // Get Input
-        float accelerate = Input.GetAxisRaw("Vertical");
-        float steer = Input.GetAxisRaw("Horizontal");
+        float accelerate = allowInput ? Input.GetAxisRaw("Vertical") : 0;
+        float steer = allowInput ? Input.GetAxisRaw("Horizontal") : 0;
 
         // Do steering
         facingAngle = ConstrainToAngleRange(facingAngle + (steer * steerRate * Time.deltaTime));
@@ -57,7 +59,15 @@ public class Player : Boid
     public override void Kill()
     {
         velocity = Vector2.zero;
+        allowInput = false;
         gameManager.EndGame();
+
+        transform.GetChild(0).gameObject.SetActive(false); // turn off zebra model
+
+        if (deathParticles != null)
+        {
+            Destroy(Instantiate(deathParticles, transform.position + (Vector3.up * 0.25f), transform.rotation, transform.parent), 1f);
+        }
     }
 
     float ConstrainToAngleRange(float input)

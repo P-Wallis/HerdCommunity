@@ -28,10 +28,10 @@ public class Boid : MonoBehaviour
     protected Vector3 scale;
     protected Animator animator;
     protected bool markedForDeath = false;
+    protected GameObject deathParticles;
 
     private Transform cameraTransform;
     private Transform cameraParent;
-    private GameObject deathParticles;
     private Transform levelGoal;
 
     public virtual void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)

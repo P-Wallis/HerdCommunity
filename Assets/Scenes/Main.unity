@@ -990,6 +990,7 @@ MonoBehaviour:
   boidPerceptionRadius: 3
   boidMaxSpeed: 2
   boidSpeedVariation: 0.5
+  boidRotateSpeed: 8
   boidAlignment: 1.5
   boidCohesion: 1
   boidSeparation: 0.08
@@ -2200,11 +2201,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Predator
-      objectReference: {fileID: 0}
-    - target: {fileID: 5982551785067585317, guid: a63dc1814e0024ba3912a3ba2c091c58,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5982551785067585321, guid: a63dc1814e0024ba3912a3ba2c091c58,
         type: 3}
