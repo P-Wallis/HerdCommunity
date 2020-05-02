@@ -93,7 +93,7 @@ public class Predator : MonoBehaviour
                         target = null;
                     }
                 }
-                else if (UpdateTimer(attackingTime))
+                if (UpdateTimer(attackingTime))
                 {
                     speed = retreatSpeed;
                     animator.SetBool(attackAnimBool, false);
