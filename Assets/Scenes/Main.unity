@@ -2199,7 +2199,7 @@ PrefabInstance:
     - target: {fileID: 5982551785067585317, guid: a63dc1814e0024ba3912a3ba2c091c58,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5982551785067585321, guid: a63dc1814e0024ba3912a3ba2c091c58,
         type: 3}
@@ -2305,12 +2305,12 @@ MonoBehaviour:
   velocity: {x: 0, y: 0}
   acceleration: {x: 0, y: 0}
   bounds: {x: 0, y: 0}
-  accelerateFactor: 0.18
-  brakeFactor: 0.166
-  steerFactor: 0.02
-  playerMaxSpeed: 5
-  drag: 0.1
   gameManager: {fileID: 0}
+  accelerateFactor: 2
+  steerRate: 90
+  playerMaxSpeed: 5
+  drag: 3
+  facingAngle: 0
 --- !u!1 &2029082466
 GameObject:
   m_ObjectHideFlags: 0

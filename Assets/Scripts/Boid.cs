@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Boid : MonoBehaviour
 {
+    protected const string runAnimationFloat = "RunSpeed";
+
     public Vector2 position // Mostly a 2D shorcut for transform.position, but using z as the y axis
     {
         get { return new Vector2(transform.position.x, transform.position.z); }
@@ -16,6 +18,7 @@ public class Boid : MonoBehaviour
     protected float perceptionRadius;
     protected float maxSpeed;
     protected float speedVariation;
+    protected float rotateSpeed;
     protected float currentSpeed;
     protected float alignmentFactor;
     protected float cohesionFactor;
@@ -43,12 +46,13 @@ public class Boid : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
-    public virtual void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds,
+    public virtual void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, float rotateSpeed, Vector2 bounds,
         float alignment, float cohesion, float separation)
     {
         this.perceptionRadius = perceptionRadius;
         this.maxSpeed = maxSpeed;
         this.speedVariation = speedVariation;
+        this.rotateSpeed = rotateSpeed;
         this.bounds = bounds;
 
         alignmentFactor = alignment;
@@ -91,10 +95,11 @@ public class Boid : MonoBehaviour
         }
 
         // Rotate to face movement direction
-        if (flipByVelocity)
+        if (flipByVelocity && velocity.sqrMagnitude > 0.01f)
         {
-            Vector3 lookAtPos = new Vector3(transform.position.x + velocity.x, transform.position.y, transform.position.z + velocity.y);
-            transform.LookAt(lookAtPos, Vector3.up);
+            Vector3 velocityDirection = new Vector3(velocity.x, 0, velocity.y);
+            Quaternion velocityRotation = Quaternion.LookRotation(velocityDirection, Vector3.up);
+            transform.rotation = Quaternion.Lerp(transform.rotation, velocityRotation, rotateSpeed * Time.deltaTime);
         }
 
         // Optionally, Confine to Bounds
@@ -255,7 +260,7 @@ public class Boid : MonoBehaviour
         float newSpeed = Mathf.Clamp01(new0to1Speed);
         currentSpeed = Mathf.Lerp(maxSpeed * (1 - halfVariation), maxSpeed * (1 + halfVariation), newSpeed);
         if (animator != null)
-            animator.SetFloat("RunSpeed", newSpeed);
+            animator.SetFloat(runAnimationFloat, newSpeed);
     }
 
     protected void SetSpeedAbsolute(float newAbsoluteSpeed)
@@ -264,7 +269,7 @@ public class Boid : MonoBehaviour
         float newSpeed = Mathf.Clamp01(((newAbsoluteSpeed/maxSpeed) - 1 + halfVariation)/speedVariation);
         currentSpeed = newAbsoluteSpeed;
         if (animator != null)
-            animator.SetFloat("RunSpeed", newSpeed);
+            animator.SetFloat(runAnimationFloat, newSpeed);
     }
 
 

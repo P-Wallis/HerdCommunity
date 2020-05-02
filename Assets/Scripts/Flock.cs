@@ -23,6 +23,7 @@ public class Flock : MonoBehaviour
     [Range(0.01f, 10)] public float boidPerceptionRadius = 1;
     [Range(0.01f, 20)] public float boidMaxSpeed = 1;
     [Range(0f, 1f)] public float boidSpeedVariation = 0.5f;
+    [Range(0f, 10f)] public float boidRotateSpeed = 8;
     [Range(0f, 2f)] public float boidAlignment = 1;
     [Range(0f, 2f)] public float boidCohesion = 1;
     [Range(0f, 2f)] public float boidSeparation = 1;
@@ -52,7 +53,7 @@ public class Flock : MonoBehaviour
         Gizmos.color = Color.black;
         for (int i = 0; i < boids.Count; i++)
         {
-            Gizmos.DrawSphere(boids[i].transform.position, .25f);
+            //Gizmos.DrawSphere(boids[i].transform.position, .25f);
         }
     }
 #endif
@@ -121,6 +122,7 @@ public class Flock : MonoBehaviour
             boidPerceptionRadius,
             boidMaxSpeed,
             boidSpeedVariation,
+            boidRotateSpeed,
             new Vector2(boundsX, boundsY),
             boidAlignment,
             boidCohesion,
