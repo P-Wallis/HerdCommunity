@@ -990,6 +990,7 @@ MonoBehaviour:
   boidPerceptionRadius: 3
   boidMaxSpeed: 2
   boidSpeedVariation: 0.5
+  boidRotateSpeed: 8
   boidAlignment: 1.5
   boidCohesion: 1
   boidSeparation: 0.08
@@ -2305,12 +2306,12 @@ MonoBehaviour:
   velocity: {x: 0, y: 0}
   acceleration: {x: 0, y: 0}
   bounds: {x: 0, y: 0}
-  accelerateFactor: 0.18
-  brakeFactor: 0.166
-  steerFactor: 0.02
-  playerMaxSpeed: 5
-  drag: 0.1
   gameManager: {fileID: 0}
+  accelerateFactor: 2
+  steerRate: 90
+  playerMaxSpeed: 5
+  drag: 3
+  facingAngle: 0
 --- !u!1 &2029082466
 GameObject:
   m_ObjectHideFlags: 0
