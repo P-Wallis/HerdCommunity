@@ -11,6 +11,8 @@ public class Scatter : MonoBehaviour
         public GameObject prefab;
         [Range(0, 100)] public int count;
         public bool randomizeRotation;
+        public bool randomizeScale;
+        [Range(0, 1)] public float scaleRandomFactor;
         public bool addToHerdAvoidList;
         [Range(0,1)]public float avoidanceWeight;
     }
@@ -98,6 +100,9 @@ public class Scatter : MonoBehaviour
 
                 if (data.addToHerdAvoidList)
                     flock.AddAvoidPoint(instance.transform, data.avoidanceWeight);
+
+                if(data.randomizeScale)
+                    instance.transform.localScale = GetScatterSize(data.scaleRandomFactor, instance.transform.localScale);
             }
         }
     }
@@ -112,5 +117,10 @@ public class Scatter : MonoBehaviour
         if (randomize)
             return Quaternion.Euler(0, Random.Range(0f, 360f), 0);
         return Quaternion.identity;
+    }
+
+    Vector3 GetScatterSize(float proportion, Vector3 originalScale)
+    {
+        return originalScale * Random.Range(1 - proportion, 1 + proportion);
     }
 }
