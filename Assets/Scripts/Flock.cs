@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AvoidPoint = Boid.AvoidPoint;
 
 public class Flock : MonoBehaviour
 {
-    [Header("Object References")]
-    public GameObject boidPrefab;
-    public GameObject bloodParticlesPrefab;
-    public Player player;
-    public Camera mainCamera;
-    public Transform[] avoidTransforms;
+    // Reference Manager Fields
+    [HideInInspector] public GameObject boidPrefab;
+    [HideInInspector] public GameObject bloodParticlesPrefab;
+    [HideInInspector] public Player player;
+    [HideInInspector] public Camera mainCamera;
+    [HideInInspector] public Transform levelGoal;
 
     [Header("Flock Parameters")]
     [Range(1,100)] public int flockSize = 1;
@@ -21,13 +22,14 @@ public class Flock : MonoBehaviour
     [Header("Boid Parameters")]
     [Range(0.01f, 10)] public float boidPerceptionRadius = 1;
     [Range(0.01f, 20)] public float boidMaxSpeed = 1;
-    [Range(0f, 1f)] public float boidAlignment = 1;
-    [Range(0f, 1f)] public float boidCohesion = 1;
-    [Range(0f, 1f)] public float boidSeparation = 1;
+    [Range(0f, 1f)] public float boidSpeedVariation = 0.5f;
+    [Range(0f, 2f)] public float boidAlignment = 1;
+    [Range(0f, 2f)] public float boidCohesion = 1;
+    [Range(0f, 2f)] public float boidSeparation = 1;
 
-    private List<Boid> boids = new List<Boid>();
+    public List<Boid> boids = new List<Boid>();
     private List<Boid> deadBoids = new List<Boid>();
-    public List<Vector2> avoidPoints;
+    protected List<AvoidPoint> avoidPoints = new List<AvoidPoint>();
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -38,12 +40,12 @@ public class Flock : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (avoidPoints != null)
+        if (avoidPoints != null && avoidPoints.Count>0)
         {
-            Gizmos.color = Color.blue;
             for (int i = 0; i < avoidPoints.Count; i++)
             {
-                Gizmos.DrawSphere(new Vector3(avoidPoints[i].x, 0, avoidPoints[i].y), .5f);
+                Gizmos.color = avoidPoints[i].Weight < 0.01f ? Color.gray : Color.Lerp(Color.blue, Color.red, avoidPoints[i].Weight);
+                Gizmos.DrawSphere(avoidPoints[i].WorldPosition, 0.5f);
             }
         }
 
@@ -57,6 +59,9 @@ public class Flock : MonoBehaviour
 
     private void Start()
     {
+        // Assign references via reflection
+        ReferenceManager.GetReferences(this);
+
         for (int i = 0; i < flockSize; i++)
         {
             GameObject boidObject = Instantiate(boidPrefab, GetRandomXZPosition(startRadius), Quaternion.identity, transform);
@@ -73,8 +78,6 @@ public class Flock : MonoBehaviour
             InitBoid(player);
             boids.Add(player);
         }
-
-        avoidPoints = GetAvoidPoints();
     }
 
     private void Update()
@@ -108,13 +111,21 @@ public class Flock : MonoBehaviour
 
     private void InitBoid(Boid boid)
     {
-        boid.Init(this, mainCamera, bloodParticlesPrefab);
+        boid.Init(this, mainCamera, bloodParticlesPrefab, levelGoal);
         SetBoidBehaviorParameters(boid);
     }
 
     private void SetBoidBehaviorParameters(Boid boid)
     {
-        boid.SetParameters(boidPerceptionRadius, boidMaxSpeed, new Vector2(boundsX, boundsY), boidAlignment, boidCohesion, boidSeparation);
+        boid.SetParameters(
+            boidPerceptionRadius,
+            boidMaxSpeed,
+            boidSpeedVariation,
+            new Vector2(boundsX, boundsY),
+            boidAlignment,
+            boidCohesion,
+            boidSeparation
+            );
     }
 
     private Vector3 GetRandomXZPosition(float radius)
@@ -133,31 +144,10 @@ public class Flock : MonoBehaviour
             r.material.color = randomColor;
     }
 
-    private List<Vector2> GetAvoidPoints()
+    public AvoidPoint AddAvoidPoint(Transform transform, float weight = 1)
     {
-        if(avoidTransforms.Length<1)
-            return null;
-
-        List<Vector2> points = new List<Vector2>();
-
-        for (int i = 0; i < avoidTransforms.Length; i++)
-        {
-            if (avoidTransforms[i] == null)
-                continue;
-
-            points.Add(new Vector2(avoidTransforms[i].position.x, avoidTransforms[i].position.z));
-        }
-
-        /*
-        // Testing Collision Circle 
-        const float r = 20f;
-        int num = Mathf.CeilToInt(Mathf.PI * 0.5f * r * boidPerceptionRadius);
-        for (int i = 0; i < num; i++)
-        {
-            float theta = (2f * Mathf.PI * i) / num;
-            points.Add(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)) * r);
-        }
-        */
-        return points;
+        AvoidPoint avoidPoint = new AvoidPoint(transform, weight);
+        avoidPoints.Add(avoidPoint);
+        return avoidPoint;
     }
 }

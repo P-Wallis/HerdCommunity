@@ -1,24 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : Boid
 {
-    [Range(0f, 10f)] public float playerMaxSpeed;
     [Range(0f, 1f)] public float accelerateFactor;
     [Range(0f, 1f)] public float brakeFactor;
     [Range(0f, 1f)] public float steerFactor;
-    [Range(0f,10f)] public float drag;
 
-    private float boidMaxSpeed;
+    [Range(0f, 10f)] public float playerMaxSpeed;
+    [Range(0f, 10f)] public float drag;
 
-    public override void SetParameters(float perceptionRadius, float maxSpeed, Vector2 bounds, float alignment, float cohesion, float separation)
+    [HideInInspector] public GameManager gameManager;
+    public override void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)
     {
-        boidMaxSpeed = maxSpeed;
-        base.SetParameters(perceptionRadius, playerMaxSpeed, bounds, alignment, cohesion, separation);
+        base.Init(flock, camera, deathParticles, levelGoal);
+        ReferenceManager.GetReferences(this);
     }
 
-    public override void CalculateAcceleration(List<Boid> flock, List<Vector2> avoidPoints = null)
+    public override void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds,
+        float alignment, float cohesion, float separation)
+    {
+        base.SetParameters(perceptionRadius, maxSpeed, speedVariation, bounds, alignment, cohesion, separation);
+
+        SetSpeedInRange(0.4f);
+    }
+
+    public override void CalculateAcceleration(List<Boid> flock, List<AvoidPoint> avoidPoints = null)
     {
         float accelerate = Input.GetAxisRaw("Vertical");
         float steer = Input.GetAxisRaw("Horizontal");
@@ -26,7 +35,7 @@ public class Player : Boid
 
         if (Input.anyKey)
         {
-            maxSpeed = playerMaxSpeed;
+            SetSpeedAbsolute(playerMaxSpeed);
 
             Vector2 direction = (velocity.magnitude > 0.001) ? velocity.normalized : Vector2.up;
             Vector2 normal = new Vector2(direction.y, -direction.x);
@@ -34,15 +43,10 @@ public class Player : Boid
             acceleration = direction * accelerate * (braking ? brakeFactor * velocity.magnitude : maxSpeed * accelerateFactor);
             acceleration += normal * steer * steerFactor * velocity.magnitude;
             acceleration /= Time.deltaTime;
-
-            //Flip based on steering
-            //flipByVelocity = false;
-            //Vector3 lookAtPos = new Vector3(transform.position.x + velocity.x, transform.position.y, transform.position.z + velocity.y);
-            //transform.LookAt(lookAtPos, Vector3.up);
         }
         else
         {
-            maxSpeed = boidMaxSpeed;
+            SetSpeedInRange(0.4f);
 
             flipByVelocity = true;
             base.CalculateAcceleration(flock, avoidPoints);
@@ -56,5 +60,12 @@ public class Player : Boid
 
         // Also add extra drag
         velocity = Vector2.Lerp(velocity, Vector2.zero, drag * Time.deltaTime);
+    }
+
+    public override void Kill()
+    {
+        //FindObjectOfType<GameManager>().EndGame();
+        velocity = Vector2.zero;
+        gameManager.EndGame();
     }
 }

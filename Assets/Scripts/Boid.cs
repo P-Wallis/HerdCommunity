@@ -15,41 +15,47 @@ public class Boid : MonoBehaviour
 
     protected float perceptionRadius;
     protected float maxSpeed;
+    protected float speedVariation;
+    protected float currentSpeed;
     protected float alignmentFactor;
     protected float cohesionFactor;
     protected float separationFactor;
     protected Flock flock;
     protected bool flipByVelocity = true;
     protected Vector3 scale;
+    protected Animator animator;
+    protected bool markedForDeath = false;
 
     private Transform cameraTransform;
     private Transform cameraParent;
-    private bool markedForDeath = false;
     private GameObject deathParticles;
+    private Transform levelGoal;
 
-    private void OnMouseDown()
-    {
-        Kill(); // Just for testing, kill the gazelle when it's clicked
-    }
-
-    public virtual void Init(Flock flock, Camera camera, GameObject deathParticles)
+    public virtual void Init(Flock flock, Camera camera, GameObject deathParticles, Transform levelGoal)
     {
         this.flock = flock;
         cameraTransform = camera!=null ? camera.transform : null;
         cameraParent = cameraTransform != null ? cameraTransform.parent : null;
         scale = transform.localScale;
         this.deathParticles = deathParticles;
+        this.levelGoal = levelGoal;
+
+        animator = GetComponentInChildren<Animator>();
     }
 
-    public virtual void SetParameters(float perceptionRadius, float maxSpeed, Vector2 bounds, float alignment, float cohesion, float separation)
+    public virtual void SetParameters(float perceptionRadius, float maxSpeed, float speedVariation, Vector2 bounds,
+        float alignment, float cohesion, float separation)
     {
         this.perceptionRadius = perceptionRadius;
         this.maxSpeed = maxSpeed;
+        this.speedVariation = speedVariation;
         this.bounds = bounds;
 
         alignmentFactor = alignment;
         cohesionFactor = cohesion;
         separationFactor = separation;
+
+        SetSpeedInRange(Random.value);
     }
 
     public virtual void PerformDeathActions()
@@ -61,7 +67,7 @@ public class Boid : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public virtual void CalculateAcceleration(List<Boid> flock, List<Vector2> avoidPoints = null)
+    public virtual void CalculateAcceleration(List<Boid> flock, List<AvoidPoint> avoidPoints = null)
     {
         List<Boid> localBoids = GetLocalBoids(flock);
         acceleration = Vector2.zero;
@@ -69,6 +75,7 @@ public class Boid : MonoBehaviour
         acceleration += GetCohesion(localBoids) * cohesionFactor;
         acceleration += GetSeparation(localBoids) * separationFactor;
         acceleration += GetCollisionAvoidance(avoidPoints);
+        acceleration += GetGoalAttaction();
     }
 
     public virtual void DoMovement()
@@ -78,9 +85,9 @@ public class Boid : MonoBehaviour
         velocity += acceleration * Time.deltaTime;
 
         // Limit the velocity to max speed
-        if (velocity.magnitude > maxSpeed)
+        if (velocity.magnitude > currentSpeed)
         {
-            velocity = velocity.normalized * maxSpeed;
+            velocity = velocity.normalized * currentSpeed;
         }
 
         // Rotate to face movement direction
@@ -95,10 +102,11 @@ public class Boid : MonoBehaviour
             ConstrainToBounds();
     }
 
-    public void Kill()
+    public virtual void Kill()
     {
         bool wasMarkedForDeath = markedForDeath;
         markedForDeath = true;
+        velocity = Vector2.zero;
 
         if (!wasMarkedForDeath)
             flock.KillBoid(this);
@@ -174,7 +182,7 @@ public class Boid : MonoBehaviour
         return separation;
     }
 
-    protected Vector2 GetCollisionAvoidance(List<Vector2> avoidPoints)
+    protected Vector2 GetCollisionAvoidance(List<AvoidPoint> avoidPoints)
     {
         Vector2 collision = Vector2.zero;
 
@@ -184,16 +192,24 @@ public class Boid : MonoBehaviour
             Vector2 direction;
             for (int i = 0; i < avoidPoints.Count; i++)
             {
-                distance = Vector2.Distance(position, avoidPoints[i]);
+                distance = Vector2.Distance(position, avoidPoints[i].Position);
                 if (distance < (perceptionRadius * 2))
                 {
-                    direction = (position - avoidPoints[i]).normalized;
-                    direction *= perceptionRadius / distance;
+                    direction = (position - avoidPoints[i].Position).normalized;
+                    direction *= perceptionRadius * avoidPoints[i].Weight / distance;
                     collision += direction;
                 }
             }
         }
         return collision;
+    }
+
+    protected Vector2 GetGoalAttaction()
+    {
+        Vector2 goalPosition = new Vector2(levelGoal.position.x, levelGoal.position.z);
+        Vector2 goalDirection = (goalPosition - position).normalized;
+
+        return goalDirection;
     }
 
     private void ConstrainToBounds()
@@ -230,6 +246,40 @@ public class Boid : MonoBehaviour
                 position = new Vector2(Mathf.Clamp(position.x * -1, -bounds.x, bounds.x), position.y);
             if (Mathf.Abs(position.y) > bounds.y)
                 position = new Vector2(position.x, Mathf.Clamp(position.y * -1, -bounds.y, bounds.y));
+        }
+    }
+
+    protected void SetSpeedInRange(float new0to1Speed)
+    {
+        float halfVariation = speedVariation / 2f;
+        float newSpeed = Mathf.Clamp01(new0to1Speed);
+        currentSpeed = Mathf.Lerp(maxSpeed * (1 - halfVariation), maxSpeed * (1 + halfVariation), newSpeed);
+        if (animator != null)
+            animator.SetFloat("RunSpeed", newSpeed);
+    }
+
+    protected void SetSpeedAbsolute(float newAbsoluteSpeed)
+    {
+        float halfVariation = speedVariation / 2f;
+        float newSpeed = Mathf.Clamp01(((newAbsoluteSpeed/maxSpeed) - 1 + halfVariation)/speedVariation);
+        currentSpeed = newAbsoluteSpeed;
+        if (animator != null)
+            animator.SetFloat("RunSpeed", newSpeed);
+    }
+
+
+    public class AvoidPoint
+    {
+        public Vector2 Position { get { return (transform != null) ? new Vector2(transform.position.x, transform.position.z) : Vector2.zero; } }
+        public Vector3 WorldPosition { get { return (transform != null) ? transform.position : Vector3.zero; } }
+        private Transform transform;
+        public float Weight { get { return (transform != null) ? weight : 0; } set { weight = value; } }
+        private float weight;
+
+        public AvoidPoint(Transform transform, float weight = 1)
+        {
+            this.transform = transform;
+            this.weight = weight;
         }
     }
 }
