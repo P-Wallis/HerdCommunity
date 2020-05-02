@@ -2201,11 +2201,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Predator
       objectReference: {fileID: 0}
-    - target: {fileID: 5982551785067585317, guid: a63dc1814e0024ba3912a3ba2c091c58,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5982551785067585321, guid: a63dc1814e0024ba3912a3ba2c091c58,
         type: 3}
       propertyPath: m_LocalPosition.x
