@@ -20,12 +20,20 @@ public class Scatter : MonoBehaviour
     private class ScatterPositionResetter : MonoBehaviour
     {
         public Vector2 bounds;
+        public Vector2 oasisBounds;
         public Vector2 padding;
         public Transform cameraParent;
+        public LevelGoal levelGoal;
+
+        private void Start()
+        {
+            ReferenceManager.GetReferences(this);
+        }
 
         private void Update()
         {
             KeepInBounds();
+            HideInsideOasis();
         }
 
         void KeepInBounds()
@@ -54,12 +62,28 @@ public class Scatter : MonoBehaviour
                 }
             }
         }
+
+        void HideInsideOasis()
+        {
+            if (levelGoal != null)
+            {
+                Vector3 oasisPos = transform.position - levelGoal.oasisPosition;
+
+                bool show = (Mathf.Abs(oasisPos.x) > oasisBounds.x || Mathf.Abs(oasisPos.y) > oasisBounds.y);
+                if (show != gameObject.activeSelf)
+                    gameObject.SetActive(show);
+
+            }
+        }
     }
 
     public Flock flock;
     public Transform cameraParent;
     [Range(0f, 20f)] public float scatterAreaX = 10;
     [Range(0f, 20f)] public float scatterAreaY = 5;
+
+    [Range(0f, 20f)] public float oasisSizeX = 10;
+    [Range(0f, 20f)] public float oasisSizeY = 5;
     public List<ScatterObjectData> scatterObjects = new List<ScatterObjectData>();
 
 #if UNITY_EDITOR
@@ -95,6 +119,7 @@ public class Scatter : MonoBehaviour
 
                 ScatterPositionResetter spr = instance.AddComponent<ScatterPositionResetter>();
                 spr.bounds = new Vector2(scatterAreaX, scatterAreaY);
+                spr.oasisBounds = new Vector2(oasisSizeX, oasisSizeY);
                 spr.padding = Vector2.one;
                 spr.cameraParent = cameraParent;
 
