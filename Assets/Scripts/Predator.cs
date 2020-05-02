@@ -6,7 +6,8 @@ public enum EnemyState {
     stalking,
     targeting,
     attacking,
-    eatting
+    retreating,
+    stopped
 }
 
 public class Predator : MonoBehaviour
@@ -17,6 +18,7 @@ public class Predator : MonoBehaviour
     // Reference Manager Fields
     [HideInInspector] public Transform cameraParent;
     [HideInInspector] public Flock flock;
+    [HideInInspector] public GameManager gameManager;
 
     // Inspector Fields
     public float stalkingTime = 60;
@@ -93,21 +95,22 @@ public class Predator : MonoBehaviour
                     animator.SetBool(attackAnimBool, false);
                     boidAvoid.Weight = .1f;
 
-                    currentState = EnemyState.eatting;
+                    currentState = EnemyState.retreating;
                 }
                 break;
             }
-            case EnemyState.eatting: {
+            case EnemyState.retreating: {
                 if (MoveTowardPosition(GetStartPoint()) || UpdateTimer(maxEatingTime))
                 {
                     ShowVisuals(false);
                     boidAvoid.Weight = 0; // We're invisible, so boids shouldn't flee
                     ResetTimer(); // in case we got to our destination early, reset the timer
 
-                    currentState = EnemyState.stalking;
+                    currentState = gameManager.GameEnded ? EnemyState.stopped : EnemyState.stalking;
                 }
                 break;
             }
+            case EnemyState.stopped: break; // if stopped, do nothing
         }
 
     }

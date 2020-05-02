@@ -53,7 +53,7 @@ public class LevelGoal : MonoBehaviour
         if(playerDistance < dectionRadius){
         	if(currentGoalIndex == goals.Count-1){
                 player.velocity = Vector2.zero;
-                gameManager.CompleteLevel();
+                gameManager.WinGame();
             }
         	else ChangePosition();
         }
