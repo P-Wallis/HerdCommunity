@@ -13,6 +13,7 @@ public class LevelGoal : MonoBehaviour
     [Range(0f, 20f)] public float goalTimeMins = 10;
 	[Range(0f, 20f)] public float goalDevation = 10;
 	[Range(0f, 20f)] public float dectionRadius = 10;
+    [Range(0f, 20f)] public float oasisDectionRadius = 10;
     [Range(0, 20)] public int numberOfPoints = 10;
 
     // Private Variables
@@ -55,16 +56,15 @@ public class LevelGoal : MonoBehaviour
     	transform.position = goals[currentGoalIndex];
     }
 
-    // Update is called once per frame
     void Update()
     {
         float playerDistance = Vector3.Distance(player.transform.position, goals[currentGoalIndex]);
-        if(playerDistance < dectionRadius){
-        	if(currentGoalIndex == goals.Count-1){
-                player.velocity = Vector2.zero;
+        if (currentGoalIndex == goals.Count - 1)
+        {
+            if(playerDistance < oasisDectionRadius)
                 gameManager.WinGame();
-            }
-        	else ChangePosition();
         }
+        else if(playerDistance < dectionRadius)
+            ChangePosition();
     }
 }

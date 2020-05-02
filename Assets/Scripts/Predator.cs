@@ -58,6 +58,11 @@ public class Predator : MonoBehaviour
 
     void Update()
     {
+        // Don't eat player after they win
+        if (gameManager.GameWon && currentState != EnemyState.retreating && currentState != EnemyState.stopped)
+            GoToRetreatState();
+
+        // State Machine
         switch(currentState) {
             case EnemyState.stalking: {
                 if (UpdateTimer(stalkingTime))
@@ -95,11 +100,7 @@ public class Predator : MonoBehaviour
                 }
                 if (UpdateTimer(attackingTime))
                 {
-                    speed = retreatSpeed;
-                    animator.SetBool(attackAnimBool, false);
-                    boidAvoid.Weight = .1f;
-
-                    currentState = EnemyState.retreating;
+                    GoToRetreatState();
                 }
                 break;
             }
@@ -117,6 +118,18 @@ public class Predator : MonoBehaviour
             case EnemyState.stopped: break; // if stopped, do nothing
         }
 
+    }
+
+    void GoToRetreatState()
+    {
+        if(currentState!= EnemyState.retreating)
+            ResetTimer(); // reset the timer, in case we jumpted to this state while timers were running
+
+        speed = retreatSpeed;
+        animator.SetBool(attackAnimBool, false);
+        boidAvoid.Weight = .1f;
+
+        currentState = EnemyState.retreating;
     }
 
     Boid GetClosestEnemy (List<Boid> enemies)
