@@ -1765,7 +1765,7 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   accelerateFactor: 2
   steerRate: 90
-  playerMaxSpeed: 5
+  playerMaxSpeed: 4
   drag: 3
   facingAngle: 0
 --- !u!1 &2032154468 stripped
